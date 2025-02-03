@@ -172,6 +172,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	private JTextField filter;
 
 	public JSpinner spinner;
+	public JSpinner spinner_Checks_SCO;
+	
 	private JCheckBox chckbxTOP1_PC;
 	private JCheckBox chckbxTOP2_PC; 
 	private JCheckBox chckbxTOP1_IL;
@@ -458,6 +460,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	 * Create the frame.
 	 */
 	public Visualizador() {
+		setMinimumSize(new Dimension(1200, 1100));
+		setMaximumSize(new Dimension(1200, 1100));
 
 		// Inicializar el IHM
 		this.initFrameVisualizador();
@@ -573,16 +577,154 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setBounds(100, 100, 1600, 864);
+		setBounds(100, 100, 1633, 948);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		
+		JTabbedPane tabbedPane_Checks = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Checks", null, tabbedPane_Checks, null);
+		
+		JPanel panel_IL = new JPanel();
+		tabbedPane_Checks.addTab("IL", null, panel_IL, null);
+		GroupLayout gl_panel_IL = new GroupLayout(panel_IL);
+		gl_panel_IL.setHorizontalGroup(
+			gl_panel_IL.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 1527, Short.MAX_VALUE)
+		);
+		gl_panel_IL.setVerticalGroup(
+			gl_panel_IL.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 720, Short.MAX_VALUE)
+		);
+		panel_IL.setLayout(gl_panel_IL);
+		
+		JPanel panel_SCO = new JPanel();
+		tabbedPane_Checks.addTab("SCO", null, panel_SCO, null);
+		
+		JPanel panel_JTextArea_Comandos = new JPanel();
+		
+			JTextArea jTextAreaComandos = new JTextArea();
+			jTextAreaComandos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			
+			
+			JScrollPane scrollPaneComandos = new JScrollPane();
+			scrollPaneComandos.setBorder(null);
+			scrollPaneComandos.setViewportBorder(UIManager.getBorder("CheckBox.border"));
+			scrollPaneComandos.setViewportView(jTextAreaComandos);
+			
+			
+			
+			
+			GroupLayout gl_panel_JTextArea_Comandos = new GroupLayout(panel_JTextArea_Comandos);
+			gl_panel_JTextArea_Comandos.setHorizontalGroup(
+				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+						.addContainerGap())
+			);
+			gl_panel_JTextArea_Comandos.setVerticalGroup(
+				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+						.addContainerGap())
+			);
+			panel_JTextArea_Comandos.setLayout(gl_panel_JTextArea_Comandos);
+			
+			JPanel panel_BotonesComandos = new JPanel();
+			
+			JButton btnNewButton_1 = new JButton("ESTADO PLATES");
+			btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
+			btnNewButton_1.setSize(new Dimension(118, 23));
+			btnNewButton_1.setPreferredSize(new Dimension(140, 23));
+			
+			JButton btnNewButton_2 = new JButton("ESTADO CHIPS");
+			btnNewButton_2.setHorizontalAlignment(SwingConstants.LEFT);
+			btnNewButton_2.setPreferredSize(new Dimension(140, 23));
+			btnNewButton_2.setSize(new Dimension(120, 24));
+			btnNewButton_2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
+			
+			
+			
+			
+			JButton btnNewButton_2_1 = new JButton("ESTADO BUCKETS");
+			btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
+			btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
+			btnNewButton_2_1.setActionCommand("");
+			
+			JButton btnEnviarComando_1_1 = new JButton("Enviar Comando");
+			btnEnviarComando_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+			
+			textField_1 = new JTextField();
+			textField_1.setFont(new Font("Dialog", Font.PLAIN, 14));
+			textField_1.setColumns(10);
+			GroupLayout gl_panel_SCO = new GroupLayout(panel_SCO);
+			gl_panel_SCO.setHorizontalGroup(
+				gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_SCO.createSequentialGroup()
+						.addGap(20)
+						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+							.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_panel_SCO.createSequentialGroup()
+								.addComponent(btnEnviarComando_1_1, GroupLayout.PREFERRED_SIZE, 165, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 248, GroupLayout.PREFERRED_SIZE)))
+						.addGap(34)
+						.addComponent(panel_JTextArea_Comandos, GroupLayout.PREFERRED_SIZE, 1075, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap())
+			);
+			gl_panel_SCO.setVerticalGroup(
+				gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_SCO.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+							.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+							.addGroup(gl_panel_SCO.createSequentialGroup()
+								.addGap(215)
+								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+								.addGap(18)
+								.addGroup(gl_panel_SCO.createParallelGroup(Alignment.BASELINE)
+									.addComponent(btnEnviarComando_1_1)
+									.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+						.addContainerGap())
+			);
+			GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
+			gl_panel_BotonesComandos.setHorizontalGroup(
+				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+			);
+			gl_panel_BotonesComandos.setVerticalGroup(
+				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
+						.addGap(5)
+						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGap(5)
+						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGap(5)
+						.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+			);
+			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
+			panel_SCO.setLayout(gl_panel_SCO);
+			
+			JPanel panel_ATHS = new JPanel();
+			tabbedPane_Checks.addTab("ATHS", null, panel_ATHS, null);
 
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		//tabbedPane_1.setEnabled(true);
-		tabbedPane.addTab("Real Time", null, tabbedPane_1, null);
+		JTabbedPane tabbedPane_RealTime = new JTabbedPane(JTabbedPane.TOP);
+	
+		tabbedPane.addTab("Real Time", null, tabbedPane_RealTime, null);
+		tabbedPane.setEnabledAt(1, true);
 
 		JPanel panel_3 = new JPanel();
-		tabbedPane_1.addTab("Main Panel", null, panel_3, null);
+		tabbedPane_RealTime.addTab("Main Panel", null, panel_3, null);
 
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -1276,15 +1418,15 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1568, Short.MAX_VALUE)
+						.addGroup(Alignment.LEADING, gl_panel_3.createSequentialGroup()
 							.addGap(21)
 							.addComponent(btnClear))
-						.addComponent(panel_1_1, GroupLayout.DEFAULT_SIZE, 1463, Short.MAX_VALUE)
-						.addComponent(checkMostrarLineasTextArea)
-						.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(checkMostrarLineasTextArea, Alignment.LEADING)
+						.addComponent(panel_4, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1568, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_3.setVerticalGroup(
@@ -1293,8 +1435,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					.addContainerGap()
 					.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 266, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_1_1, GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel_1_1, GroupLayout.PREFERRED_SIZE, 307, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
 					.addComponent(checkMostrarLineasTextArea)
 					.addGap(1)
 					.addComponent(btnClear, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
@@ -1302,16 +1444,18 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		);
 		panel_3.setLayout(gl_panel_3);
 
-		JTabbedPane tabbedPane_3 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("PostProcesado", null, tabbedPane_3, null);
-		tabbedPane.setEnabledAt(1, true);
+		JTabbedPane tabbedPane_PostProcess = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_PostProcess.setVisible(false);
+		tabbedPane_PostProcess.setEnabled(false);
+		tabbedPane.addTab("PostProcesado", null, tabbedPane_PostProcess, null);
+		tabbedPane.setEnabledAt(2, true);
 
 		JPanel panel = new JPanel();
-		tabbedPane_3.addTab("Filtering", null, panel, null);
-		tabbedPane_3.setEnabledAt(0, true);
+		tabbedPane_PostProcess.addTab("Filtering", null, panel, null);
+		tabbedPane_PostProcess.setEnabledAt(0, true);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setEnabled(false);
+		panel_1.setEnabled(true);
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 
 		JPanel panel_2 = new JPanel();
@@ -1636,26 +1780,241 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		GroupLayout groupLayout = new GroupLayout(this.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 1589, Short.MAX_VALUE)
-					.addGap(1))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 1560, Short.MAX_VALUE)
-					.addGap(21))
+				.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 1619, Short.MAX_VALUE)
+				.addComponent(toolBar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1619, Short.MAX_VALUE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 732, GroupLayout.PREFERRED_SIZE)
+					.addGap(12)
+					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(39, Short.MAX_VALUE))
 		);
+		
+		JPanel panel_2_1_1_1 = new JPanel();
+		toolBar.add(panel_2_1_1_1);
+		panel_2_1_1_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		
+		JLabel lblTop_1_1 = new JLabel("TOP :");
+		lblTop_1_1.setFont(new Font("Dialog", Font.BOLD, 12));
+		
+		spinner_Checks_SCO = new JSpinner();
+		spinner_Checks_SCO.setModel(new SpinnerNumberModel(1, 1, 2, 1));
+		
+		JLabel lblConsulta = new JLabel("CONSULTA");
+		lblConsulta.setFont(new Font("Dialog", Font.PLAIN, 12));
+		
+		JComboBox comboSistemas_1_1 = new JComboBox(new Object[]{});
+		comboSistemas_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		
+		JButton conectar_1_1 = new JButton("Conectar");
+		
+					conectar_1_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							Consulta consultaChecks = new Consulta();
+							consultaChecks.setFiltro("");
+							consultaChecks.setFiltrosActivos(new Vector<ModelFilter>());
+							consultaChecks.setModulosActivos(new Vector<Modulo>());
+							consultaChecks.setNameConsulta("Checks");
+							consultaChecks.setSistemaConsulta("SCO");
+							String keyConsulta = consultaChecks.getNombreConsultaFull();
+							
+							catalogoConsultas.put(keyConsulta, consultaChecks);
+							
+							catalogFiltersRegistry.put(keyConsulta, makeCatalogFilter(consultaChecks));
+							logger.info("Actualizado catalogo de filtros para la consulta: "+keyConsulta);
+							
+							String numeroMaquina = ""+spinner_Checks_SCO.getValue();
+							ConsultaTarea cTareaConnectChecks = new ConsultaTarea(consultaChecks, numeroMaquina, null);
+							
+							connectMixto(cTareaConnectChecks);
+						}
+					});
+					conectar_1_1.setFont(new Font("SansSerif", Font.PLAIN, 12));
+					
+					JButton desconectar_1_1 = new JButton("Desconectar");
+					desconectar_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+					
+					JCheckBox chckbxTOP1_PC_1_1 = new JCheckBox("PC");
+					chckbxTOP1_PC_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP1_PC_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_PC_1_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP2_PC_1_1 = new JCheckBox("PC");
+					chckbxTOP2_PC_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP2_PC_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_PC_2_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP1_ATHS_1_1 = new JCheckBox("Aths");
+					chckbxTOP1_ATHS_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP1_ATHS_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_ATHS_1_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP1_SCO_1_1 = new JCheckBox("SCO");
+					chckbxTOP1_SCO_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP1_SCO_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_SCO_1_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP1_IL_1_1 = new JCheckBox("IL");
+					chckbxTOP1_IL_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP1_IL_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_IL_1_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP2_IL_1_1 = new JCheckBox("IL");
+					chckbxTOP2_IL_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP2_IL_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_IL_2_1_1 = new JLabel("0");
+					
+					JCheckBox chckbxTOP2_ATHS_1_1 = new JCheckBox("Aths");
+					chckbxTOP2_ATHS_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP2_ATHS_1_1.setBackground(Color.WHITE);
+					
+					JCheckBox chckbxTOP2_SCO_1_1 = new JCheckBox("SCO");
+					chckbxTOP2_SCO_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
+					chckbxTOP2_SCO_1_1.setBackground(Color.WHITE);
+					
+					JLabel lblCountThreads_SCO_2_1_1 = new JLabel("0");
+					
+					JLabel lblCountThreads_ATHS_2_1_1 = new JLabel("0");
+					
+					JLabel lblNewLabel_5_2_1 = new JLabel("TOP1");
+					lblNewLabel_5_2_1.setFont(new Font("Dialog", Font.BOLD, 11));
+					
+					JLabel lblNewLabel_5_1_1_1 = new JLabel("TOP2");
+					lblNewLabel_5_1_1_1.setFont(new Font("Dialog", Font.BOLD, 11));
+					GroupLayout gl_panel_2_1_1_1 = new GroupLayout(panel_2_1_1_1);
+					gl_panel_2_1_1_1.setHorizontalGroup(
+						gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+								.addGap(20)
+								.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(lblTop_1_1)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(comboSistemas_1_1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(spinner_Checks_SCO, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(conectar_1_1, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(desconectar_1_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)))
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP1_IL_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_IL_1_1_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
+													.addComponent(chckbxTOP1_SCO_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+													.addComponent(chckbxTOP1_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+													.addComponent(lblCountThreads_ATHS_1_1_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+													.addComponent(lblCountThreads_SCO_1_1_1, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP1_PC_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_PC_1_1_1, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)))
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP2_IL_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_IL_2_1_1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP2_SCO_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_SCO_2_1_1, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP2_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_ATHS_2_1_1, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addComponent(chckbxTOP2_PC_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(lblCountThreads_PC_2_1_1, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))))
+									.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+										.addGap(114)
+										.addComponent(lblConsulta)
+										.addPreferredGap(ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_5_2_1)
+										.addGap(49)
+										.addComponent(lblNewLabel_5_1_1_1, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
+										.addGap(24)))
+								.addGap(1086))
+					);
+					gl_panel_2_1_1_1.setVerticalGroup(
+						gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblNewLabel_5_2_1)
+										.addComponent(lblConsulta))
+									.addComponent(lblNewLabel_5_1_1_1))
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+									.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+										.addGap(1)
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+											.addComponent(chckbxTOP1_IL_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+											.addComponent(chckbxTOP2_IL_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+											.addComponent(lblCountThreads_IL_2_1_1)
+											.addComponent(lblCountThreads_IL_1_1_1))
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+											.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+												.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+													.addComponent(chckbxTOP1_SCO_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+													.addComponent(lblCountThreads_SCO_1_1_1))
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
+													.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+														.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+															.addComponent(chckbxTOP2_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+															.addComponent(lblCountThreads_ATHS_2_1_1))
+														.addPreferredGap(ComponentPlacement.RELATED)
+														.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+															.addComponent(chckbxTOP2_PC_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+															.addComponent(chckbxTOP1_PC_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+															.addComponent(lblCountThreads_PC_1_1_1)
+															.addComponent(lblCountThreads_PC_2_1_1)))
+													.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+														.addComponent(spinner_Checks_SCO, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+														.addComponent(conectar_1_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+														.addComponent(desconectar_1_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+													.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+														.addComponent(chckbxTOP1_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+														.addComponent(lblCountThreads_ATHS_1_1_1))))
+											.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+												.addComponent(chckbxTOP2_SCO_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblCountThreads_SCO_2_1_1))))
+									.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
+										.addGap(6)
+										.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
+											.addComponent(comboSistemas_1_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(lblTop_1_1, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))))
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					);
+					panel_2_1_1_1.setLayout(gl_panel_2_1_1_1);
 
-		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Filters", null, tabbedPane_2, null);
+		JTabbedPane tabbedPane_Filters = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_Filters.setEnabled(true);
+		tabbedPane.addTab("Filters", null, tabbedPane_Filters, null);
+		tabbedPane.setEnabledAt(3, true);
 
 		JPanel panel_5 = new JPanel();
-		tabbedPane_2.addTab("GestionListeners", null, panel_5, null);
+		tabbedPane_Filters.addTab("GestionListeners", null, panel_5, null);
 
 		JPanel panel_6 = new JPanel();
 
@@ -1889,307 +2248,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		panel_6.setLayout(gl_panel_6);
 		panel_5.setLayout(gl_panel_5);
 		
-		JTabbedPane tabbedPane_4 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Checks", null, tabbedPane_4, null);
-		
 		//kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 		
 		JPanel jPanelMainComandos = new JPanel();
-		
-		JPanel panel_IL = new JPanel();
-		tabbedPane_4.addTab("IL", null, panel_IL, null);
-		GroupLayout gl_panel_IL = new GroupLayout(panel_IL);
-		gl_panel_IL.setHorizontalGroup(
-			gl_panel_IL.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 1527, Short.MAX_VALUE)
-		);
-		gl_panel_IL.setVerticalGroup(
-			gl_panel_IL.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 720, Short.MAX_VALUE)
-		);
-		panel_IL.setLayout(gl_panel_IL);
-		
-		JPanel panel_SCO = new JPanel();
-		tabbedPane_4.addTab("SCO", null, panel_SCO, null);
-		
-		JPanel panel_JTextArea_Comandos = new JPanel();
-	
-		JTextArea jTextAreaComandos = new JTextArea();
-		jTextAreaComandos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		
-		
-		JScrollPane scrollPaneComandos = new JScrollPane();
-		scrollPaneComandos.setBorder(null);
-		scrollPaneComandos.setViewportBorder(UIManager.getBorder("CheckBox.border"));
-		scrollPaneComandos.setViewportView(jTextAreaComandos);
-		
-		
-		
-		
-		GroupLayout gl_panel_JTextArea_Comandos = new GroupLayout(panel_JTextArea_Comandos);
-		gl_panel_JTextArea_Comandos.setHorizontalGroup(
-			gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		gl_panel_JTextArea_Comandos.setVerticalGroup(
-			gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		panel_JTextArea_Comandos.setLayout(gl_panel_JTextArea_Comandos);
-		
-		JPanel panel_BotonesComandos = new JPanel();
-		
-		JButton btnNewButton_1 = new JButton("ESTADO PLATES");
-		panel_BotonesComandos.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("ESTADO CHIPS");
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		panel_BotonesComandos.add(btnNewButton_2);
-		
-		
-		
-		
-		JButton btnNewButton_2_1 = new JButton("ESTADO BUCKETS");
-		btnNewButton_2_1.setActionCommand("");
-		panel_BotonesComandos.add(btnNewButton_2_1);
-		
-		JPanel panel_2_1_1_1 = new JPanel();
-		panel_2_1_1_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		JLabel lblTop_1_1 = new JLabel("TOP :");
-		lblTop_1_1.setFont(new Font("Dialog", Font.BOLD, 12));
-		
-		JSpinner spinner_1_1 = new JSpinner();
-		
-		JLabel label_1_1_1 = new JLabel("SISTEMA :");
-		label_1_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
-		
-		JComboBox comboSistemas_1_1 = new JComboBox(new Object[]{});
-		comboSistemas_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
-		
-		JButton conectar_1_1 = new JButton("Conectar");
-		conectar_1_1.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		
-		JButton desconectar_1_1 = new JButton("Desconectar");
-		desconectar_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
-		
-		JCheckBox chckbxTOP1_PC_1_1 = new JCheckBox("PC");
-		chckbxTOP1_PC_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP1_PC_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_PC_1_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP2_PC_1_1 = new JCheckBox("PC");
-		chckbxTOP2_PC_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP2_PC_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_PC_2_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP1_ATHS_1_1 = new JCheckBox("Aths");
-		chckbxTOP1_ATHS_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP1_ATHS_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_ATHS_1_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP1_SCO_1_1 = new JCheckBox("SCO");
-		chckbxTOP1_SCO_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP1_SCO_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_SCO_1_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP1_IL_1_1 = new JCheckBox("IL");
-		chckbxTOP1_IL_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP1_IL_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_IL_1_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP2_IL_1_1 = new JCheckBox("IL");
-		chckbxTOP2_IL_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP2_IL_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_IL_2_1_1 = new JLabel("0");
-		
-		JCheckBox chckbxTOP2_ATHS_1_1 = new JCheckBox("Aths");
-		chckbxTOP2_ATHS_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP2_ATHS_1_1.setBackground(Color.WHITE);
-		
-		JCheckBox chckbxTOP2_SCO_1_1 = new JCheckBox("SCO");
-		chckbxTOP2_SCO_1_1.setBorder(new CompoundBorder(null, UIManager.getBorder("CheckBoxMenuItem.border")));
-		chckbxTOP2_SCO_1_1.setBackground(Color.WHITE);
-		
-		JLabel lblCountThreads_SCO_2_1_1 = new JLabel("0");
-		
-		JLabel lblCountThreads_ATHS_2_1_1 = new JLabel("0");
-		
-		JLabel lblNewLabel_5_2_1 = new JLabel("TOP1");
-		lblNewLabel_5_2_1.setFont(new Font("Dialog", Font.BOLD, 11));
-		
-		JLabel lblNewLabel_5_1_1_1 = new JLabel("TOP2");
-		lblNewLabel_5_1_1_1.setFont(new Font("Dialog", Font.BOLD, 11));
-		
-		JButton btnEnviarComando_1_1 = new JButton("Enviar Comando");
-		btnEnviarComando_1_1.setFont(new Font("Dialog", Font.PLAIN, 12));
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Dialog", Font.PLAIN, 14));
-		textField_1.setColumns(10);
-		GroupLayout gl_panel_2_1_1_1 = new GroupLayout(panel_2_1_1_1);
-		gl_panel_2_1_1_1.setHorizontalGroup(
-			gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
-								.addComponent(spinner_1_1, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTop_1_1))
-							.addGap(42)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
-									.addComponent(label_1_1_1)
-									.addGap(118))
-								.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-									.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-										.addComponent(comboSistemas_1_1, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-											.addComponent(conectar_1_1, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-											.addGap(22)
-											.addComponent(desconectar_1_1)))
-									.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)))
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(chckbxTOP1_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addComponent(chckbxTOP1_SCO_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-									.addComponent(chckbxTOP1_IL_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblCountThreads_SCO_1_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(lblCountThreads_IL_1_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(lblCountThreads_ATHS_1_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING, false)
-										.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-											.addComponent(chckbxTOP2_SCO_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(lblCountThreads_SCO_2_1_1, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-											.addComponent(chckbxTOP2_IL_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(lblCountThreads_IL_2_1_1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-											.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.TRAILING)
-												.addComponent(chckbxTOP2_PC_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-												.addComponent(chckbxTOP2_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblCountThreads_PC_2_1_1, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblCountThreads_ATHS_2_1_1, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)))))
-								.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-									.addGap(18)
-									.addComponent(lblNewLabel_5_2_1)
-									.addGap(51)
-									.addComponent(lblNewLabel_5_1_1_1, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-									.addComponent(chckbxTOP1_PC_1_1, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblCountThreads_PC_1_1_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-							.addComponent(btnEnviarComando_1_1, GroupLayout.PREFERRED_SIZE, 165, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE)
-							.addGap(14)))
-					.addContainerGap())
-		);
-		gl_panel_2_1_1_1.setVerticalGroup(
-			gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel_5_2_1)
-								.addComponent(lblNewLabel_5_1_1_1))
-							.addGap(6)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(chckbxTOP1_IL_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_IL_1_1_1)
-								.addComponent(chckbxTOP2_IL_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_IL_2_1_1))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(chckbxTOP1_SCO_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_SCO_1_1_1)
-								.addComponent(chckbxTOP2_SCO_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_SCO_2_1_1))
-							.addGap(5)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(chckbxTOP1_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_ATHS_1_1_1)
-								.addComponent(chckbxTOP2_ATHS_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_ATHS_2_1_1))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(chckbxTOP1_PC_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCountThreads_PC_1_1_1)
-								.addComponent(lblCountThreads_PC_2_1_1)
-								.addComponent(chckbxTOP2_PC_1_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel_2_1_1_1.createSequentialGroup()
-							.addComponent(label_1_1_1)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(comboSistemas_1_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTop_1_1, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(conectar_1_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-								.addComponent(desconectar_1_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-								.addComponent(spinner_1_1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))))
-					.addGap(18)
-					.addGroup(gl_panel_2_1_1_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnEnviarComando_1_1)
-						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-					.addGap(101))
-		);
-		panel_2_1_1_1.setLayout(gl_panel_2_1_1_1);
-		GroupLayout gl_panel_SCO = new GroupLayout(panel_SCO);
-		gl_panel_SCO.setHorizontalGroup(
-			gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_SCO.createSequentialGroup()
-					.addGap(20)
-					.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 537, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(panel_JTextArea_Comandos, GroupLayout.PREFERRED_SIZE, 977, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
-		);
-		gl_panel_SCO.setVerticalGroup(
-			gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_SCO.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
-						.addGroup(gl_panel_SCO.createSequentialGroup()
-							.addComponent(panel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
-							.addGap(32)
-							.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
-		);
-		panel_SCO.setLayout(gl_panel_SCO);
-		
-		JPanel panel_ATHS = new JPanel();
-		tabbedPane_4.addTab("ATHS", null, panel_ATHS, null);
 
 		this.getContentPane().setLayout(groupLayout);
 
@@ -2567,18 +2628,16 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		DatagramSocket socketSistema=null;
 		// Definimos el sockets, número de bytes del buffer, y mensaje.
 		InfoConexionSistema infoConnectSystem = this.infoConexionRegistry.get(cTarea.getNameSocketSistema());
-		String ipPPC = infoConnectSystem.getIp();
+		String iP = infoConnectSystem.getIp();
 		InetAddress address;
 		byte[] mensaje_bytes = new byte[256];
-		String mensaje = "";
-		mensaje_bytes = mensaje.getBytes();
-		// Paquete
+		String mensaje;
+
 		DatagramPacket paquete;
 		try {
-			// 1 Socket por sistema / 1  Receivers por dispatcher
-			
+				
 			socketSistema = getSocketPoll(cTarea.getNameSocketSistema());
-			address = InetAddress.getByName(ipPPC);
+			address = InetAddress.getByName(iP);
 			mensaje = "h";
 			mensaje_bytes = mensaje.getBytes();
 			paquete = new DatagramPacket(mensaje_bytes, mensaje.length(), address, 5008);

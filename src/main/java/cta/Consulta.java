@@ -16,7 +16,7 @@ public class Consulta implements Serializable {
 	Vector<Modulo> modulosActivos;
 	String filtro;// filtro de texto rapido del tipo "cadena&cadenaotra|otracadena&cadenaotra"
 	Vector<ModelFilter> filtrosActivos;
-	//String numeroMaquina;
+
 
 
 
