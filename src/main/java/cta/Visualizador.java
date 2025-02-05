@@ -1788,17 +1788,17 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					.addComponent(panel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 468, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(874, Short.MAX_VALUE))
+					.addContainerGap(876, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 732, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
 						.addComponent(panel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_9, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
 		
 		JButton btnEnviarComando_1 = new JButton("Enviar Comando");
@@ -2123,6 +2123,11 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		comboListenersActivos.setSelectedIndex(comboListenersActivos.getItemCount() - 1);
 		labelListenersCount.setText("(" + comboListenersActivos.getItemCount() + ")");
 	}
+	
+	/*
+	 * Para efectuar una consulta o enviar un comando, se requiere una conexion y un comando o mensaje
+	 * conexion ---> requiere una Consulta Tarea registrada
+	 */
 	private void commandChecks() {
 		Consulta consultaChecks = new Consulta();
 		consultaChecks.setFiltro("");
@@ -2141,6 +2146,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		ConsultaTarea cTareaConnectChecks = new ConsultaTarea(consultaChecks, numeroMaquina, null);
 		
 		connectMixto(cTareaConnectChecks);
+		enviarComando("sc " + mod.getNombre() + " he",(String) comboSistemas.getSelectedItem()+":"+ spinner.getValue());
 	
 	}
 
@@ -2446,9 +2452,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	public void enviarComando(String comando, String sistema) {
 		byte[] mensaje_bytes = new byte[256];
 
-		
 		InfoConexionSistema infoSistema = this.infoConexionRegistry.get(sistema);
-		// Paquete
+	
 		DatagramPacket paquete;
 		InetAddress address;
 
@@ -2459,6 +2464,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			e.printStackTrace();
 			return;
 		}
+		
 		mensaje_bytes = comando.getBytes();
 		paquete = new DatagramPacket(mensaje_bytes, comando.length(), address, 5008);
 		try {
@@ -2468,9 +2474,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				socket.send(paquete);
 				logger.info("Enviando sobre "+ sistema+ " comando :" + comando);
 			}else {
-					logger.warn("Ojo, el socket es null enviando "+ comando);
+				logger.warn("Ojo, el socket es null enviando "+ comando);
 			}
-	
 				
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

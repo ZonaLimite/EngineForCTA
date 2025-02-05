@@ -71,6 +71,7 @@ public class Receiver implements Runnable {
 					cadenaMensaje = st.nextToken();
 
 					// filtrar por catalogo de filtros texto (normalmente por cada linea)
+					// Tambien se puede aqui hacer un dispatch de consultasComando para mostrarlo en el TaxtArea del tab ChecksComandos
 					if (algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
 						handlerWriteLine(cadenaMensaje);
 					}
