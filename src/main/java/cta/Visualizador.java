@@ -578,111 +578,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 		JTabbedPane tabbedPane_Checks = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addTab("Checks", null, tabbedPane_Checks, null);
-		
-		JPanel panel_SCO = new JPanel();
-		tabbedPane_Checks.addTab("SCO", null, panel_SCO, null);
-		
-		JPanel panel_JTextArea_Comandos = new JPanel();
-		
-			JTextArea jTextAreaComandos = new JTextArea();
-			jTextAreaComandos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-			
-			
-			JScrollPane scrollPaneComandos = new JScrollPane();
-			scrollPaneComandos.setBorder(null);
-			scrollPaneComandos.setViewportBorder(UIManager.getBorder("CheckBox.border"));
-			scrollPaneComandos.setViewportView(jTextAreaComandos);
-			
-			
-			
-			
-			GroupLayout gl_panel_JTextArea_Comandos = new GroupLayout(panel_JTextArea_Comandos);
-			gl_panel_JTextArea_Comandos.setHorizontalGroup(
-				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
-						.addContainerGap())
-			);
-			gl_panel_JTextArea_Comandos.setVerticalGroup(
-				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-						.addContainerGap())
-			);
-			panel_JTextArea_Comandos.setLayout(gl_panel_JTextArea_Comandos);
-			
-			JPanel panel_BotonesComandos = new JPanel();
-			
-			JButton btnNewButton_1 = new JButton("CONSULTA PLATES");
-			btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
-			btnNewButton_1.setSize(new Dimension(118, 23));
-			btnNewButton_1.setPreferredSize(new Dimension(140, 23));
-			
-			JButton btnNewButton_2 = new JButton("CONSULTA CHIPS");
-			btnNewButton_2.setHorizontalAlignment(SwingConstants.LEFT);
-			btnNewButton_2.setPreferredSize(new Dimension(140, 23));
-			btnNewButton_2.setSize(new Dimension(120, 24));
-			btnNewButton_2.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-				}
-			});
-			
-			
-			
-			
-			JButton btnNewButton_2_1 = new JButton("CONSULTA BUCKETS");
-			btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
-			btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
-			btnNewButton_2_1.setActionCommand("");
-			GroupLayout gl_panel_SCO = new GroupLayout(panel_SCO);
-			gl_panel_SCO.setHorizontalGroup(
-				gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel_SCO.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1361, Short.MAX_VALUE)
-						.addContainerGap())
-			);
-			gl_panel_SCO.setVerticalGroup(
-				gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel_SCO.createSequentialGroup()
-						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
-							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addGap(20)
-								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
-							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addGap(35)
-								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap())
-			);
-			GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
-			gl_panel_BotonesComandos.setHorizontalGroup(
-				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
-					.addGroup(Alignment.TRAILING, gl_panel_BotonesComandos.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING)
-							.addComponent(btnNewButton_2_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-							.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-							.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
-						.addContainerGap())
-			);
-			gl_panel_BotonesComandos.setVerticalGroup(
-				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
-					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
-						.addGap(5)
-						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(5)
-						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(5)
-						.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(8))
-			);
-			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
-			panel_SCO.setLayout(gl_panel_SCO);
 			
 			JPanel panel_ATHS = new JPanel();
 			tabbedPane_Checks.addTab("ATHS", null, panel_ATHS, null);
@@ -699,6 +594,111 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					.addGap(0, 720, Short.MAX_VALUE)
 			);
 			panel_IL.setLayout(gl_panel_IL);
+			
+			JPanel panel_SCO = new JPanel();
+			tabbedPane_Checks.addTab("SCO", null, panel_SCO, null);
+			
+			JPanel panel_JTextArea_Comandos = new JPanel();
+			
+				JTextArea jTextAreaComandos = new JTextArea();
+				jTextAreaComandos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				
+				
+				JScrollPane scrollPaneComandos = new JScrollPane();
+				scrollPaneComandos.setBorder(null);
+				scrollPaneComandos.setViewportBorder(UIManager.getBorder("CheckBox.border"));
+				scrollPaneComandos.setViewportView(jTextAreaComandos);
+				
+				
+				
+				
+				GroupLayout gl_panel_JTextArea_Comandos = new GroupLayout(panel_JTextArea_Comandos);
+				gl_panel_JTextArea_Comandos.setHorizontalGroup(
+					gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+							.addContainerGap())
+				);
+				gl_panel_JTextArea_Comandos.setVerticalGroup(
+					gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+							.addContainerGap())
+				);
+				panel_JTextArea_Comandos.setLayout(gl_panel_JTextArea_Comandos);
+				
+				JPanel panel_BotonesComandos = new JPanel();
+				
+				JButton btnNewButton_1 = new JButton("CONSULTA PLATES");
+				btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
+				btnNewButton_1.setSize(new Dimension(118, 23));
+				btnNewButton_1.setPreferredSize(new Dimension(140, 23));
+				
+				JButton btnNewButton_2 = new JButton("CONSULTA CHIPS");
+				btnNewButton_2.setHorizontalAlignment(SwingConstants.LEFT);
+				btnNewButton_2.setPreferredSize(new Dimension(140, 23));
+				btnNewButton_2.setSize(new Dimension(120, 24));
+				btnNewButton_2.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
+				
+				
+				
+				
+				JButton btnNewButton_2_1 = new JButton("CONSULTA BUCKETS");
+				btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
+				btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
+				btnNewButton_2_1.setActionCommand("");
+				GroupLayout gl_panel_SCO = new GroupLayout(panel_SCO);
+				gl_panel_SCO.setHorizontalGroup(
+					gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_SCO.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1361, Short.MAX_VALUE)
+							.addContainerGap())
+				);
+				gl_panel_SCO.setVerticalGroup(
+					gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_SCO.createSequentialGroup()
+							.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_SCO.createSequentialGroup()
+									.addGap(20)
+									.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
+								.addGroup(gl_panel_SCO.createSequentialGroup()
+									.addGap(35)
+									.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)))
+							.addContainerGap())
+				);
+				GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
+				gl_panel_BotonesComandos.setHorizontalGroup(
+					gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel_BotonesComandos.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnNewButton_2_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+								.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+								.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+							.addContainerGap())
+				);
+				gl_panel_BotonesComandos.setVerticalGroup(
+					gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
+							.addGap(5)
+							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(8))
+				);
+				panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
+				panel_SCO.setLayout(gl_panel_SCO);
 
 		JTabbedPane tabbedPane_RealTime = new JTabbedPane(JTabbedPane.TOP);
 	
