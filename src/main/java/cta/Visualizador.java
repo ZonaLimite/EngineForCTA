@@ -460,6 +460,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 		// Inicializar el IHM
 		this.initFrameVisualizador();
+		this.setExtendedState(6);//MAXIMIZED_BOTH
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
 		this.initStructures();
@@ -2146,7 +2147,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		ConsultaTarea cTareaConnectChecks = new ConsultaTarea(consultaChecks, numeroMaquina, null);
 		
 		connectMixto(cTareaConnectChecks);
-		enviarComando("sc " + mod.getNombre() + " he",(String) comboSistemas.getSelectedItem()+":"+ spinner.getValue());
+		//enviarComando("sc " + mod.getNombre() + " he",(String) comboSistemas.getSelectedItem()+":"+ spinner.getValue());
 	
 	}
 

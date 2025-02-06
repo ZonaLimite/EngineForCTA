@@ -39,7 +39,7 @@ public class Receiver implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int sizeBufferDatagramPacket = 8192; // 8 Kbytes
+		int sizeBufferDatagramPacket = 4096; // 8 Kbytes
 		//int sizeReadBytes = 2048;
 		String[] sArrayFilter = null;
 		do {
