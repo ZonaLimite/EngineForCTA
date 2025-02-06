@@ -7,7 +7,8 @@ public class Algoritmos {
 	public boolean filterMatch(String cadenaMensaje, String[] sArrayFilter, boolean filterExclusiveSelected) {
 		boolean match = false;
 		// filtrar por catalogo de filtros texto
-
+		if(sArrayFilter.length==0)return true;
+		
 		for (String sFilter : sArrayFilter) {
 			// cONTROL FILTRO COPULATIVO
 			if (sFilter.contains("&")) {
@@ -20,15 +21,16 @@ public class Algoritmos {
 				if (match_AND == mask_AND.length)
 					return true;
 			} else {
-				if (sFilter.equals("")) {
+				//}
+				/*if (sFilter.equals("")) {
 					// Solo imprimimos si hay caja vacia de mascara filtro, cuando no esta
 					// seleccionado filter Exclusive
 					if (!filterExclusiveSelected)
 						return true;
-				} else {
+				} else {*/
 					if (cadenaMensaje.contains(sFilter))
 						return true;
-				}
+				//}
 			}
 		}
 		return match;

@@ -4,6 +4,8 @@ import java.net.DatagramPacket;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -17,7 +19,16 @@ public class Receiver implements Runnable {
 	private DatagramSocket mySocket = null;
 	private Visualizador vis;
 	private ConsultaTarea cTarea;
+	public ConsultaTarea getcTarea() {
+		return cTarea;
+	}
+
+	public void setcTarea(ConsultaTarea cTarea) {
+		this.cTarea = cTarea;
+	}
+
 	private SimpMessagingTemplate smt;
+	private Map<String,String[]> catalogFiltersRegistry;
 
 	Algoritmos algoritmos;
 	Logger log = Logger.getLogger("Receiver");
@@ -42,6 +53,8 @@ public class Receiver implements Runnable {
 		int sizeBufferDatagramPacket = 4096; // 8 Kbytes
 		//int sizeReadBytes = 2048;
 		String[] sArrayFilter = null;
+		String nameKeySystemWithThisSystemreceiver;
+		
 		do {
 			byte[] RecogerServidor_bytes = new byte[sizeBufferDatagramPacket];
 
@@ -53,15 +66,10 @@ public class Receiver implements Runnable {
 
 				String sPacket = new String(servPaquete.getData()).trim();
 
-				// El visualizador es comun a todos los hilos [singleton] y el Text Area es el
-				// mimso para todos
-				// el catalogFilter es construido por cada consulta activa, lo que implica que
-				// la
-				// construccion del catalog Filter debe elaborarse en base a todas las consultas
-				// activas y/o modo
-
-				// sArrayFilter = vis.getCatalogFilter(sistemaSocket);
+				
 				String nameConsulta = cTarea.getNombreConsultaFull();
+				
+				
 				sArrayFilter = vis.getCatalogFiltersRegistry(nameConsulta);
 
 				// Splitamos el mensaje recibido en lineas
@@ -147,5 +155,6 @@ public class Receiver implements Runnable {
 		this.vis = visualizador;
 		this.cTarea = cTarea;
 		this.smt = smt;
+		catalogFiltersRegistry = vis.getCatalogFiltersRegistry();
 	}
 }

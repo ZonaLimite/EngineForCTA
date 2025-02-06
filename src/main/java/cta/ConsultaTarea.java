@@ -24,7 +24,9 @@ public class ConsultaTarea implements Serializable {
 	}
 
 
-
+	public String getSistemaConsulta() {
+		return this.consulta.getSistemaConsulta();
+	}
 	public void setNameFileSource(File nameFileSource) {
 		this.nameFileSource = nameFileSource;
 	}

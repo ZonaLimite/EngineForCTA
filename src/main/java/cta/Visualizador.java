@@ -149,6 +149,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	
 	private ConcurrentHashMap<String,String[]> catalogFiltersRegistry;// sistema-maquina->catalogFilter
 	
+	public ConcurrentHashMap<String, String[]> getCatalogFiltersRegistry() {
+		return catalogFiltersRegistry;
+	}
 	private ConcurrentHashMap<String,InfoConexionSistema> infoConexionRegistry; //sistema-maquina-> InfoConexionSistema
 	
 	private ConcurrentHashMap<String, JCheckBox> ledSocketRegistry; //sistema-maquina-> Jcheckbox
@@ -2884,14 +2887,15 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	// Crea un array con un catalogo de cadenas como criterio para la inclusion de
 	// lineas
 	// Paramas: un String con una mascara de tipo "criterio1|criterio2|...criterion"
+	// La logica actual permite visualizar cuzlquier line , cuando no hay ningun filtro
 	public String[] makeCatalogFilter(Consulta consulta) {
 
 		Vector<String> vMasker = new Vector<String>();
 		// Si no hay consultas definidas salimos con default mask
 		if (combo_Consultas.getItemCount() == 0 | consulta == null) {
-			String[] masks = new String[1];
-			masks[0] = "";
-			logger.info("Masks = \"\"" );
+			String[] masks = new String[0];
+			//masks[0] = "";
+			//logger.info("Masks = \"\"" );
 			return masks;
 		}
 
@@ -2913,12 +2917,14 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		// Añadiendo las mascaras de filtro rapido
 		StringTokenizer st = new StringTokenizer(consulta.getFiltro(), "|");
 		if (!st.hasMoreElements()) {
-			if (this.filterExclusive.isSelected()) {
+			/*if (this.filterExclusive.isSelected()) {
 				if (!consulta.getFiltro().equals(""))
 					vMasker.add(consulta.getFiltro());
-			} else {
-				vMasker.add(consulta.getFiltro());
-			}
+			} else {*/
+				if (!consulta.getFiltro().equals("")) {
+					vMasker.add(consulta.getFiltro());
+				}
+			//}
 		} else {
 			while (st.hasMoreElements()) {
 
@@ -2942,8 +2948,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 		// Si no hay nada que filtrar se establece filtro default ""
 		if (vMasker.size() == 0) {
-			masks = new String[1];
-			masks[0] = "";
+			//masks = new String[1];
+			//masks[0] = "";
 		} else {
 			vMasker.toArray(masks);
 		}
@@ -3185,6 +3191,10 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		refreshComboFiltrosActivos(consulta.getNombreConsultaFull());
 
 		filter.setText(consulta.getFiltro());
+		
+		//Si existe un Receiver de este sistema que esta registrado y en uso
+		//actualizamos el receiver con el nuevo CTarea para que trabaje los cambios que incorpore
+		//la nueva consulta elegida por el usuario
 	
 	}
 
