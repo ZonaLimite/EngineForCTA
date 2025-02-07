@@ -152,6 +152,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	public ConcurrentHashMap<String, String[]> getCatalogFiltersRegistry() {
 		return catalogFiltersRegistry;
 	}
+	private ConcurrentHashMap<String, CommmandFilter> catalogCommandsRegistry; // nombreComando --> ObjetoComandFilter
 	private ConcurrentHashMap<String,InfoConexionSistema> infoConexionRegistry; //sistema-maquina-> InfoConexionSistema
 	
 	private ConcurrentHashMap<String, JCheckBox> ledSocketRegistry; //sistema-maquina-> Jcheckbox

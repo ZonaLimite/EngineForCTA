@@ -49,7 +49,7 @@ public class Receiver implements Runnable {
 			e.printStackTrace();
 		}
 		
-		int sizeBufferDatagramPacket = 4096; // 8 Kbytes
+		int sizeBufferDatagramPacket = 2024; // 8 Kbytes
 		//int sizeReadBytes = 2048;
 		String[] sArrayFilter = null;
 
@@ -69,8 +69,6 @@ public class Receiver implements Runnable {
 				String nameConsulta = cTarea.getNombreConsultaFull();
 				
 				
-				sArrayFilter = vis.getCatalogFiltersRegistry(nameConsulta);
-
 				// Splitamos el mensaje recibido en lineas
 				// Por cada LinesistemaSocket
 				StringTokenizer st = new StringTokenizer(sPacket, System.getProperty("line.separator") + "|\r");
@@ -78,10 +76,14 @@ public class Receiver implements Runnable {
 					cadenaMensaje = st.nextToken();
 
 					// filtrar por catalogo de filtros texto (normalmente por cada linea)
-					// Tambien se puede aqui hacer un dispatch de consultasComando para mostrarlo en el TaxtArea del tab ChecksComandos
+					sArrayFilter = vis.getCatalogFiltersRegistry(nameConsulta);
 					if (algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
 						handlerWriteLine(cadenaMensaje);
 					}
+					
+					//Filtrar por catalogo de Comandos
+					
+					
 				}
 
 			} catch (Exception e) {
