@@ -994,16 +994,12 @@ public class Visualizador extends JFrame implements ServletContextListener {
 							Consulta consulta =(Consulta) arg0.getItem();
 							logger.info("obteniendo item seleccionado " + consulta.getNombreConsultaFull());
 							refreshObjectConsulta(consulta);
-							
-							//La cuestion ahora es que el catalogFilters es construido en base al Modo de trabajo establecido
-							//1 : Consulta ; 2: MultiConsulta
-							if(modoTrabajo==1) {
-								String keyConsulta = consulta.getNombreConsultaFull();
-								catalogFiltersRegistry.put(keyConsulta, makeCatalogFilter(consulta));
-								logger.info("Actualizado catalogo de filtros para la consulta:"+keyConsulta);
-							}
-
 							logger.info("Refrescado objeto consulta");
+		
+							if(modoTrabajo==1) {
+								String top =  ""+spinner.getValue();	
+								registryCatalogFiltersConsulta(consulta, top, null);
+							}
 						}
 					}
 				});
@@ -3293,14 +3289,45 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 		refreshObjectConsulta(newConsulta);
 		
-		//La cuestion ahora es que el catalogFilters es construido en base al Modo de trabajo establecido
-		//1 : Consulta ; 2: MultiConsulta
-			String keyConsulta = newConsulta.getNombreConsultaFull();
-			catalogFiltersRegistry.put(keyConsulta, makeCatalogFilter(newConsulta));
-			logger.info("Actualizado catalogo de filtros para la consulta:"+keyConsulta);
-
+		String top =  ""+spinner.getValue();	
+		registryCatalogFiltersConsulta(newConsulta, top, null);
+		
 		// Serializamos el catalogo a fichero
 		salvarCatalogos();
+	}
+
+	private void registryCatalogFiltersConsulta(Consulta newConsulta, String numMaquina, File nameFile) {
+		String keyConsulta = newConsulta.getNombreConsultaFull();
+		catalogFiltersRegistry.put(keyConsulta, makeCatalogFilter(newConsulta));
+		logger.info("Actualizado catalogo de filtros para la consulta:"+keyConsulta);
+
+		//Recorrer el registro de TreadReceivers para ver si hay activo algun receiver
+		//que este trabajando el sistema de la consulta indicada, para actualizar la CTarea
+		//de ese receiver con la nueva CTarea proporcionada
+		
+			
+		ConsultaTarea cTarea = new ConsultaTarea(newConsulta,numMaquina,null) ;
+		
+		//private ConcurrentHashMap<String, Vector<Receiver>> threadReceiverRegistry
+		
+		Iterator<String> itKeysThreadReceiver = threadReceiverRegistry.keys().asIterator();
+		while(itKeysThreadReceiver.hasNext()) {
+			String key = itKeysThreadReceiver.next();
+			if(key.equals(cTarea.getNameSocketSistema())) {
+				Vector<Receiver> vReceiver= threadReceiverRegistry.get(key);
+				//Solo hay un hilo por receiver segun especificacion
+				//Y si hay algun hilo arriba ...
+				if(vReceiver.size()>0) {
+					Receiver receiver = vReceiver.get(0); 
+					receiver.setcTarea(cTarea);
+					logger.info("Actualizado cTarea para Thread Receiver :"+receiver.getcTarea().getNombreConsultaFull());
+				}
+			
+
+			}
+		}
+		
+		
 	}
 
 	// Borra la consulta actual al registro de consultas y refresca

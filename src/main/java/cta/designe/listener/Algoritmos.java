@@ -21,16 +21,13 @@ public class Algoritmos {
 				if (match_AND == mask_AND.length)
 					return true;
 			} else {
-				//}
-				/*if (sFilter.equals("")) {
-					// Solo imprimimos si hay caja vacia de mascara filtro, cuando no esta
-					// seleccionado filter Exclusive
-					if (!filterExclusiveSelected)
-						return true;
-				} else {*/
+					//Para distinguir un filtro de traza , de un filtro de comando
+					// el nombre del filtro puede empezar por algun tipo de cadena
+					//prefijada, por ejemplo COMMAND_
+					
 					if (cadenaMensaje.contains(sFilter))
 						return true;
-				//}
+
 			}
 		}
 		return match;

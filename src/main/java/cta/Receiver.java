@@ -28,8 +28,7 @@ public class Receiver implements Runnable {
 	}
 
 	private SimpMessagingTemplate smt;
-	private Map<String,String[]> catalogFiltersRegistry;
-
+	
 	Algoritmos algoritmos;
 	Logger log = Logger.getLogger("Receiver");
 
@@ -47,13 +46,13 @@ public class Receiver implements Runnable {
 			log.info("Tama�o ajustado de buffer DatagramSocket :" + mySocket.getReceiveBufferSize());
 			log.info("Desde Hilo " + cTarea.getNameSocketSistema() + " trabajando " + cTarea.getNombreConsultaFull());
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		int sizeBufferDatagramPacket = 4096; // 8 Kbytes
 		//int sizeReadBytes = 2048;
 		String[] sArrayFilter = null;
-		String nameKeySystemWithThisSystemreceiver;
+
 		
 		do {
 			byte[] RecogerServidor_bytes = new byte[sizeBufferDatagramPacket];
@@ -155,6 +154,5 @@ public class Receiver implements Runnable {
 		this.vis = visualizador;
 		this.cTarea = cTarea;
 		this.smt = smt;
-		catalogFiltersRegistry = vis.getCatalogFiltersRegistry();
 	}
 }
