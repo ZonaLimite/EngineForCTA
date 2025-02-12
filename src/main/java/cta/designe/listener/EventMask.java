@@ -11,7 +11,6 @@ public class EventMask implements Serializable{
 	private boolean enabled;
 	
 	public EventMask(String nameMaskEvent, String nameMaskEventDescrip, String maskPublic, String topicBroker, boolean enabled) {
-
 		this.nameMaskEvent = nameMaskEvent;
 		this.nameMaskEventDescrip = nameMaskEventDescrip;
 		this.formatMaskPublish = maskPublic;

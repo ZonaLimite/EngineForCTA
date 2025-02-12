@@ -13,6 +13,12 @@ public class Modulo implements Serializable,Cloneable {
 	String mask;
 	String sistema;
 	
+	
+	
+	public Modulo() {
+		super();
+	}
+	
 	public String getSistema() {
 		return sistema;
 	}
@@ -39,7 +45,8 @@ public class Modulo implements Serializable,Cloneable {
 	}
 	public String toString() {
 		return this.getNombre()+"("+ this.getDescripcion()+")->"+this.getMask();
-		
 	}
+	
+	
 	
 }

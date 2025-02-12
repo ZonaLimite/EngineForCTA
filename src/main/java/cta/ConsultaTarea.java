@@ -22,35 +22,21 @@ public class ConsultaTarea implements Serializable {
 	public File getNameFileSource() {
 		return nameFileSource;
 	}
-
-
 	public String getSistemaConsulta() {
 		return this.consulta.getSistemaConsulta();
 	}
 	public void setNameFileSource(File nameFileSource) {
 		this.nameFileSource = nameFileSource;
 	}
-
-
-
 	public Consulta getConsulta() {
 		return consulta;
 	}
-
-
-
 	public void setConsulta(Consulta consulta) {
 		this.consulta = consulta;
 	}
-
-
-
 	public String getNumeroMaquina() {
 		return numeroMaquina;
 	}
-
-
-
 	public void setNumeroMaquina(String numeroMaquina) {
 		this.numeroMaquina = numeroMaquina;
 	}

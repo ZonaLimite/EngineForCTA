@@ -23,6 +23,7 @@ public class EngineApplication {
 			vis.modulosRegistrables = vis.initVectorModules(vis.comboSistemas.getSelectedItem() + ".csv");
 
 			vis.setVisible(true);
+			vis.selectSistema("IL");
 		});
 
 	}

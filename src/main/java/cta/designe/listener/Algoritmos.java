@@ -21,13 +21,8 @@ public class Algoritmos {
 				if (match_AND == mask_AND.length)
 					return true;
 			} else {
-					//Para distinguir un filtro de traza , de un filtro de comando
-					// el nombre del filtro puede empezar por algun tipo de cadena
-					//prefijada, por ejemplo COMMAND_
-					
-					if (cadenaMensaje.contains(sFilter))
-						return true;
-
+				
+				if (cadenaMensaje.contains(sFilter))return true;
 			}
 		}
 		return match;

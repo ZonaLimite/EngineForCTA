@@ -4,18 +4,23 @@ import java.net.DatagramPacket;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import cta.designe.listener.Algoritmos;
+import cta.designe.listener.STATE_COMMAND;
+import cta.designe.listener.StatedCommand;
 import cta.remote.stompbroker.ModelEventTrace;
 
-public class Receiver implements Runnable {
-
+public class Receiver implements Runnable, IReceiver {
+	
+	private ConcurrentHashMap<String, StatedCommand> catalogCommandregistry;
 	private DatagramSocket mySocket = null;
 	private Visualizador vis;
 	private ConsultaTarea cTarea;
@@ -36,6 +41,7 @@ public class Receiver implements Runnable {
 		// Registrar este receiver para el sistema dado (max. 3 hilos)
 		Vector<Receiver> vThreads = vis.getThreadReceiverRegistry().get(cTarea.getNameSocketSistema());
 		vThreads.add(this);
+		catalogCommandregistry = vis.getCatalogCommandsRegistry();
 		vis.getThreadReceiverRegistry().put(cTarea.getNameSocketSistema(), vThreads);
 		vis.refreshLedsSocketsStatus();
 
@@ -58,32 +64,29 @@ public class Receiver implements Runnable {
 			byte[] RecogerServidor_bytes = new byte[sizeBufferDatagramPacket];
 
 			try {
-				// EsperamoHilo Finalizado"s a recibir un paquete/
+
 
 				DatagramPacket servPaquete = new DatagramPacket(RecogerServidor_bytes, RecogerServidor_bytes.length);
 				mySocket.receive(servPaquete);
 
 				String sPacket = new String(servPaquete.getData()).trim();
-
 				
 				String nameConsulta = cTarea.getNombreConsultaFull();
-				
 				
 				// Splitamos el mensaje recibido en lineas
 				// Por cada LinesistemaSocket
 				StringTokenizer st = new StringTokenizer(sPacket, System.getProperty("line.separator") + "|\r");
 				while (st.hasMoreTokens()) {
 					cadenaMensaje = st.nextToken();
-
-					// filtrar por catalogo de filtros texto (normalmente por cada linea)
+					
+					//Hay que tener en cuenta que aqui la cadenaMensaje no tiene concatenado el sistema Consulta al principio de linea
+					checkCommands(cadenaMensaje);   
+					
+					// Filtrar por catalogo de filtros texto (normalmente por cada linea)
 					sArrayFilter = vis.getCatalogFiltersRegistry(nameConsulta);
 					if (algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
 						handlerWriteLine(cadenaMensaje);
 					}
-					
-					//Filtrar por catalogo de Comandos
-					
-					
 				}
 
 			} catch (Exception e) {
@@ -143,12 +146,127 @@ public class Receiver implements Runnable {
 			}
 		}
 		// Configuracion 4
-				// Dispatching evento
+		// Dispatching evento A WEBSOCKET
 		if(vis.chckbxPublishToWebsocket.isSelected()) {
 			if (algoritmos.filterMatch(cadena,vis.getCatalogListener(), true)) {
 				smt.convertAndSend("/channel/traces", new ModelEventTrace("eventTrace",cadena));
 				}
 		}
+	}
+	
+	
+	/*
+	 * Algoritmo de proceso commands
+	 * Parameter : String con la cadena a checkera como cadena de comando
+	 * Return: Boolean true if la cadena es consumida
+	 */
+	public boolean checkCommands(String cadenaMensaje) {
+		// Filtrar por catalogo de Comandos
+		boolean cadenaMensajeConsumed = false;
+		if(vis.getCatalogCommandsRegistry().size() >= 1) { //Hay comandos registrados
+			
+			Iterator<String> iteratorKeysCommands = catalogCommandregistry.keys().asIterator();
+		
+			while(iteratorKeysCommands.hasNext()) {
+				String keyCommand = iteratorKeysCommands.next();
+				
+				//Procesar statedCommand por cada key registrada
+				
+				StatedCommand statedCommand =  vis.getCatalogCommandsRegistry().get(keyCommand);
+				String sistemaComando = statedCommand.getSistemaComando();
+				STATE_COMMAND state = statedCommand.getStateCommand(); 
+				
+			
+				//EL stateComand esta HANDLED y se ha pasado el tiempo de procesamiento sin resultado FINALIZED
+				if(state == STATE_COMMAND.HANDLED & sistemaComando.equals(cTarea.getNameSocketSistema())) {
+					long timeNow = new Date().getTime();
+					if(timeNow > statedCommand.getRefTimeInit() + statedCommand.getMaxTimeOut() ) {
+						statedCommand.setStateCommand(STATE_COMMAND.TIMEOUT);
+						vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
+						vis.getjTextAreaComandos().append(System.getProperty("line.separator") + " TIMEOUT " + statedCommand.getNameComando() ); //Imprimimos el test al Textarea
+						log.info("statedCommand " +keyCommand + " TIMEOUT from receiver " + this.getcTarea().getNameSocketSistema());
+						catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
+						continue;
+					}
+				}
+				
+				//El stateCommand esta DECLARED y coincide con el sistema base. Se cambia a estado HANLED y se hace Owner a este receiver.
+				if(state == STATE_COMMAND.DECLARED & sistemaComando.equals(cTarea.getNameSocketSistema())) {
+					statedCommand.setOwner(this);
+					statedCommand.setStateCommand(STATE_COMMAND.HANDLED);
+					log.info("statedCommand " + keyCommand + " HANDLED for receiver " + this.getcTarea().getNameSocketSistema());
+				}
+				
+				// El stateCommand esta HANDLED y este receiver es su OWnwer. 
+				if(state == STATE_COMMAND.HANDLED && statedCommand.getOwner() == this) {
+					//////////////////////////////////////////////////////////////////////////////
+					//Comprobar si es final de Comando,guardar linea y cambiar a estado FINALIZED
+					/////////////////////////////////////////////////////////////////////////////
+					String maskEndTest = statedCommand.getMaskEndTest();
+				
+					if (maskEndTest.contains("&")) {
+						String mask_AND[] = maskEndTest.split("&");
+						int match_AND = 0;
+						for (String m : mask_AND) {
+							if (cadenaMensaje.contains(m))
+								match_AND++;
+						}
+						if (match_AND == mask_AND.length) {
+							statedCommand.setResult(statedCommand.getResult() +  cadenaMensaje.concat(System.getProperty("line.separator")));
+							cadenaMensajeConsumed = true ;
+							statedCommand.setStateCommand(STATE_COMMAND.FINALIZED);
+							vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
+							catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
+							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " + this.getcTarea().getNameSocketSistema());
+							continue; //ya no hace falta seguir
+						
+						}
+					} else {
+						if(cadenaMensaje.contains(maskEndTest)) {
+							statedCommand.setResult(statedCommand.getResult() +  cadenaMensaje.concat(System.getProperty("line.separator")));
+							cadenaMensajeConsumed = true ;
+							statedCommand.setStateCommand(STATE_COMMAND.FINALIZED);
+							vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
+							catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
+							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " + this.getcTarea().getNameSocketSistema());
+							continue; //ya no hace falta seguir
+						}
+					}
+					//////////////////////////////////////////////////////////////////////////////////
+					//Procesar lineas y añadir a result si esta linea contiene alguna de las mascasras
+					//////////////////////////////////////////////////////////////////////////////////
+					Iterator<String> itMasks = statedCommand.getModelMasks().iterator();
+					while(itMasks.hasNext()) {
+						// cONTROL FILTRO COPULATIVO
+						String mask = itMasks.next();
+						if (mask.contains("&")) {
+							String mask_AND[] = mask.split("&");
+							int match_AND = 0;
+							for (String m : mask_AND) {
+								if (cadenaMensaje.contains(m))
+									match_AND++;
+							}
+							if (match_AND == mask_AND.length) {
+								statedCommand.setResult(statedCommand.getResult() +  cadenaMensaje.concat(System.getProperty("line.separator")));
+								cadenaMensajeConsumed = true ;
+							
+							}
+								
+						} else {
+							
+							if(cadenaMensaje.contains(mask)) {
+								statedCommand.setResult(statedCommand.getResult() +  cadenaMensaje.concat(System.getProperty("line.separator")));
+								cadenaMensajeConsumed = true ;
+								
+							}
+						}
+					}
+				}
+				//if(cadenaMensajeConsumed == true) break;
+			}
+			
+		}
+		return cadenaMensajeConsumed;
 	}
 	
 	public Receiver(DatagramSocket socket, Visualizador visualizador, ConsultaTarea cTarea, SimpMessagingTemplate smt) {

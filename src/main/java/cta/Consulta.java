@@ -31,9 +31,17 @@ public class Consulta implements Serializable {
 		
 	}
 	
-
+   
 	public Consulta() {
 		super();
+	}
+	
+	public Consulta(String sistemaConsulta, String nameConsulta) {
+		this.sistemaConsulta = sistemaConsulta;
+		this.nameConsulta = nameConsulta;
+		this.modulosActivos = new Vector<Modulo>();
+		this.filtro = "";
+		this.filtrosActivos = new Vector<ModelFilter>();
 	}
 
 	public Vector<ModelFilter> getFiltrosActivos() {
