@@ -589,23 +589,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		tabbedPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		JTabbedPane tabbedPane_Checks = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_Checks.setMaximumSize(new Dimension(500, 300));
 		tabbedPane.addTab("Checks", null, tabbedPane_Checks, null);
-		
-		JPanel panel_ATHS = new JPanel();
-		tabbedPane_Checks.addTab("ATHS", null, panel_ATHS, null);
-		
-		JPanel panel_IL = new JPanel();
-		tabbedPane_Checks.addTab("IL", null, panel_IL, null);
-		GroupLayout gl_panel_IL = new GroupLayout(panel_IL);
-		gl_panel_IL.setHorizontalGroup(
-			gl_panel_IL.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 1527, Short.MAX_VALUE)
-		);
-		gl_panel_IL.setVerticalGroup(
-			gl_panel_IL.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 720, Short.MAX_VALUE)
-		);
-		panel_IL.setLayout(gl_panel_IL);
 		
 		JPanel panel_SCO = new JPanel();
 		tabbedPane_Checks.addTab("SCO", null, panel_SCO, null);
@@ -701,7 +686,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 							.addGroup(gl_panel_SCO.createSequentialGroup()
 								.addComponent(btnNewButton_5)
 								.addPreferredGap(ComponentPlacement.RELATED)))
-						.addComponent(panel_JTextArea_Comandos, GroupLayout.PREFERRED_SIZE, 1174, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1174, Short.MAX_VALUE)
 						.addContainerGap())
 			);
 			gl_panel_SCO.setVerticalGroup(
@@ -710,11 +695,13 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGap(20)
 						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_panel_SCO.createSequentialGroup()
+								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+								.addGap(10))
+							.addGroup(gl_panel_SCO.createSequentialGroup()
 								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 526, Short.MAX_VALUE)
-								.addComponent(btnNewButton_5))
-							.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
-						.addContainerGap())
+								.addPreferredGap(ComponentPlacement.RELATED, 515, Short.MAX_VALUE)
+								.addComponent(btnNewButton_5)
+								.addGap(22))))
 			);
 			
 			JButton btnNewButton_1_1 = new JButton("CONSULTA PLATES TOP 2");
@@ -789,6 +776,22 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			);
 			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
 			panel_SCO.setLayout(gl_panel_SCO);
+		
+		JPanel panel_ATHS = new JPanel();
+		tabbedPane_Checks.addTab("ATHS", null, panel_ATHS, null);
+		
+		JPanel panel_IL = new JPanel();
+		tabbedPane_Checks.addTab("IL", null, panel_IL, null);
+		GroupLayout gl_panel_IL = new GroupLayout(panel_IL);
+		gl_panel_IL.setHorizontalGroup(
+			gl_panel_IL.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 1527, Short.MAX_VALUE)
+		);
+		gl_panel_IL.setVerticalGroup(
+			gl_panel_IL.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 720, Short.MAX_VALUE)
+		);
+		panel_IL.setLayout(gl_panel_IL);
 
 		JTabbedPane tabbedPane_RealTime = new JTabbedPane(JTabbedPane.TOP);
 	
@@ -1890,7 +1893,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 732, GroupLayout.PREFERRED_SIZE)
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 732, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(panel_System, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
