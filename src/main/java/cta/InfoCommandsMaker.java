@@ -1,13 +1,12 @@
 package cta;
 
-import java.util.Date;
 import java.util.Vector;
 
-import cta.designe.listener.EventMask;
-import cta.designe.listener.ModelFilter;
-import cta.designe.listener.STATE_COMMAND;
+import org.springframework.stereotype.Component;
+
 import cta.designe.listener.StatedCommand;
 
+@Component
 public class InfoCommandsMaker {
 
 	public InfoCommandsMaker() {
@@ -25,38 +24,44 @@ public class InfoCommandsMaker {
 	 * //maxTimeOut esta em milisegun , asi que 3 segundos = 3000 
 	 */
 	
-	StatedCommand makeFactoryCommand(String nameCommand, String sistema, String moduloMaquina,String maquina,Integer flagDisconnnectSistema) {
+	StatedCommand makeFactoryCommand(String nameCommand, String sistema, String moduloMaquina,String maquina ) {
 
 		StatedCommand statedCommand = null;
-		String baseSistemaCommand = sistema+":"+maquina+":"+nameCommand;
+		String baseSistemaCommand = sistema+":"+maquina+":"+moduloMaquina+":"+nameCommand;
+		String mask1,mask2,mask3,mask4;
+		String maskEndTest1;
+		Vector<String> modelMasks;
+		
 		switch (baseSistemaCommand) { 
-	    case "SCO:1:gapl": //Get All Plates Labels
-	    	Vector<String> modelMasksSCO1 = new Vector<String>();
-	    	String MaskSCO1_1 = "CMD UpperCnv -& with [Label:"; 
-	    	String MaskSCO1_2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
+	    case "SCO:1:UpperCnv:gapl": //Get All Plates Labels
+	    	modelMasks = new Vector<String>();
+	    	mask1 = "CMD UpperCnv -& with [Label:"; 
+	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
 
-	    	modelMasksSCO1.add(MaskSCO1_1);
-	    	modelMasksSCO1.add(MaskSCO1_2);
+	    	modelMasks.add(mask1);
+	    	modelMasks.add(mask2);
 	    	
-	    	String maskEndTestSCO1 = "CMD UpperCnv - Plate[423] with [Label:";
+	    	maskEndTest1 = "CMD UpperCnv - Plate[423] with [Label:";
 	    		
-	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasksSCO1,maskEndTestSCO1,10000);
+	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
 
 	     break;
 	     
-	    case "SCO:2:gapl": //Get All Plates Labels
-	    	Vector<String> modelMasksSCO2 = new Vector<String>();
-	    	String MaskSCO2_1 = "CMD UpperCnv -& with [Label:"; 
-	    	String MaskSCO2_2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
+	    case "SCO:1:LowerCnv:gapl": //Get All Plates Labels
+	    	modelMasks = new Vector<String>();
+	    	mask1 = "CMD LowerCnv -& with [Label:"; 
+	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
 
-	    	modelMasksSCO2.add(MaskSCO2_1);
-	    	modelMasksSCO2.add(MaskSCO2_2);
+	    	modelMasks.add(mask1);
+	    	modelMasks.add(mask2);
 	    	
-	    	String maskEndTestSCO2 = "CMD UpperCnv - Plate[423] with [Label:";
+	    	maskEndTest1 = "CMD LowerCnv - Plate[423] with [Label:";
 	    		
-	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasksSCO2,maskEndTestSCO2,10000);
+	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
 
 	     break;
+
+	
 	    default:
 	     // Default secuencia de sentencias.
 		}

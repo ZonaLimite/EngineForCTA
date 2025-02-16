@@ -79,7 +79,9 @@ public class Receiver implements Runnable, IReceiver {
 				while (st.hasMoreTokens()) {
 					cadenaMensaje = st.nextToken();
 					
-					//Hay que tener en cuenta que aqui la cadenaMensaje no tiene concatenado el sistema Consulta al principio de linea
+					//A�adimos identificador de sistema origen a la cadena
+					cadenaMensaje = cTarea.getNameSocketSistema().concat(" "+cadenaMensaje);
+
 					checkCommands(cadenaMensaje);   
 					
 					// Filtrar por catalogo de filtros texto (normalmente por cada linea)
@@ -112,8 +114,6 @@ public class Receiver implements Runnable, IReceiver {
 
 	public void handlerWriteLine(String cadena) {
 		
-		//A�adimos identificador de sistema origen a la cadena
-		cadena = cTarea.getNameSocketSistema().concat(" "+cadena);
 
 		// Configuracion 1		
 		// Solo Imprimimos el paquete recibido a caja visualizador(opcionalmente)

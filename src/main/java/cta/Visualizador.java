@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import cta.designe.listener.Algoritmos;
 import cta.designe.listener.EventMask;
@@ -118,11 +119,14 @@ import javax.swing.JScrollBar;
 import java.awt.Rectangle;
 import javax.swing.JLayeredPane;
 
-@Component
+@Service
 public class Visualizador extends JFrame implements ServletContextListener {
 	
 	@Autowired
 	private SimpMessagingTemplate webSocket;//Inyeccion dependencia channel websocket
+	
+	@Autowired
+	InfoCommandsMaker infoCommandsMaker;
 	
 	@Value("${uri.file.catalogos}")
 	public String catalogos; //un mapeo a la propertie en application properties
@@ -482,7 +486,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		// Inicializar repositorios de modulos 
 		//this.modulosRegistrables = this.initVectorModules(this.comboSistemas.getSelectedItem() + ".csv");
 		
-		Vector vCentros = new Vector();
+		Vector<String> vCentros = new Vector<String>();
 		vCentros.add("Madrid");
 		vCentros.add("Valladolid");
 		vCentros.add("Valencia");
@@ -648,18 +652,12 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					String sistemaCommand = "SCO";
 					String moduloMaquina = "UpperCnv";
 					String numMaquina = "1";
-					String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+originalCommand; //get all plate label
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+					moduloMaquina="LowerCnv";
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
 					
-					InfoCommandsMaker infoCommandsMaker = new InfoCommandsMaker();
-					
-					logger.info("Registrado comando "+ keyStatedCommand);
-					Integer flagDisconnnectSistema = flagDisconnectRegistry.get(sistemaCommand+":"+numMaquina);
-
-					StatedCommand statedCommand = infoCommandsMaker.makeFactoryCommand(originalCommand,sistemaCommand, moduloMaquina,numMaquina, flagDisconnnectSistema);
-					catalogCommandsRegistry.put(keyStatedCommand, statedCommand);
-			    	prepareLaunchCommand(flagDisconnnectSistema,sistemaCommand,originalCommand,numMaquina);
-					enviarComando("sc "+moduloMaquina+" "+originalCommand,sistemaCommand+":"+numMaquina);
 				}
+
 
 			});
 			
@@ -722,15 +720,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					String numMaquina = "2";
 					String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+originalCommand; //get all plate label
 					
-					InfoCommandsMaker infoCommandsMaker = new InfoCommandsMaker();
-					
-					logger.info("Registrado comando "+ keyStatedCommand);
-					Integer flagDisconnnectSistema = flagDisconnectRegistry.get(sistemaCommand+":"+numMaquina);
-
-					StatedCommand statedCommand = infoCommandsMaker.makeFactoryCommand(originalCommand,sistemaCommand, moduloMaquina,numMaquina, flagDisconnnectSistema);
-					catalogCommandsRegistry.put(keyStatedCommand, statedCommand);
-			    	prepareLaunchCommand(flagDisconnnectSistema,sistemaCommand,originalCommand,numMaquina);
-					enviarComando("sc "+moduloMaquina+" "+originalCommand,sistemaCommand+":"+numMaquina);
 				}
 			});
 			btnNewButton_2_2.setSize(new Dimension(120, 24));
@@ -2290,8 +2279,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 	}
 	
-	private void prepareLaunchCommand(Integer flagDisconnnectSistema, String sistemaCommand,String nameCommand, String numMaquina) {
-	
+	private void prepareLaunchCommand(String sistemaCommand,String nameCommand, String numMaquina) {
+		Integer flagDisconnnectSistema = flagDisconnectRegistry.get(sistemaCommand+":"+numMaquina);
 		if(flagDisconnnectSistema==null ) {
 			logger.info("No hay conexion registrada para "+sistemaCommand+":"+numMaquina+", conectando ...");
 			prepareConnection(sistemaCommand,nameCommand,numMaquina);
@@ -2592,6 +2581,22 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		enviarComando("sc " + mod.getNombre() + " he",(String) comboSistemas.getSelectedItem()+":"+ spinner.getValue());
 
 	}
+	
+	private void executeCommand(String sistemaCommand, String numMaquina, String moduloMaquina, String originalCommand) {
+		String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+moduloMaquina+":"+originalCommand; //get all plate label
+
+
+
+		StatedCommand statedCommand = infoCommandsMaker.makeFactoryCommand(originalCommand,sistemaCommand, moduloMaquina,numMaquina);
+		catalogCommandsRegistry.put(keyStatedCommand, statedCommand);
+		logger.info("Registrado comando "+ keyStatedCommand);
+		prepareLaunchCommand(sistemaCommand,originalCommand,numMaquina);
+		enviarComando("sc "+moduloMaquina+" "+originalCommand,sistemaCommand+":"+numMaquina);
+
+		
+	}
+	
+	
 
 	/**
 	 *  Para enviar un comando, dada la hibridez de sistemas posibles en la consulta

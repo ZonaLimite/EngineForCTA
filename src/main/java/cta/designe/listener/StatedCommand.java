@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import cta.IReceiver;
-import cta.Receiver;
+
 
 public class StatedCommand {
 	String sistemaComando;              	//El sistema base al que pertenece este comando

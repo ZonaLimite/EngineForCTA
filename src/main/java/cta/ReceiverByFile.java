@@ -82,7 +82,9 @@ public class ReceiverByFile implements Runnable,IReceiver {
 					Thread.sleep(1);
 				
 					//cadenaMensaje = br.readLine();
-	
+					//A�adimos identificador de sistema origen a la cadena
+					cadenaMensaje = cTarea.getNameSocketSistema().concat(" "+cadenaMensaje);
+
 					checkCommands(cadenaMensaje);
 	
 					if(algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
@@ -120,9 +122,6 @@ public class ReceiverByFile implements Runnable,IReceiver {
 
 	public void handlerWriteLine(String cadena) {
 		
-		//A�adimos identificador de sistema origen a la cadena
-		cadena = cTarea.getNameSocketSistema().concat(" "+cadena);
-
 		// Configuracion 1		
 		// Solo Imprimimos el paquete recibido a caja visualizador(opcionalmente)
 		if(vis.getCheckMostrarLineasTextArea().isSelected()) {
