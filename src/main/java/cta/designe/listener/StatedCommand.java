@@ -16,8 +16,8 @@ public class StatedCommand {
 	long maxTimeOut; 						//EL tiempo transcurrido maximo permitido (TimeOut)
 	long refTimeInit; 						//El tiempo de inicializacion del comando (Debe haber un receiver activo)
 	String result; 							//La deteccion de lineas de comando se concatenara en un String result
-	
-	public StatedCommand(String sistemaComando, String nameComando,	 Vector<String> modelMasks, String maskEndTest, long maxTimeOut) {
+	String titulo;							//Un titulo a modo de break para separar Comandos
+	public StatedCommand(String sistemaComando, String nameComando,	 Vector<String> modelMasks, String maskEndTest,long maxTimeOut) {
 		this.sistemaComando=sistemaComando;
 		this.nameComando=nameComando;
 		this.stateCommand =  STATE_COMMAND.DECLARED;

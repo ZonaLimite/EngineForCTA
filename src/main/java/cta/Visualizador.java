@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
@@ -118,6 +119,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JScrollBar;
 import java.awt.Rectangle;
 import javax.swing.JLayeredPane;
+import javax.swing.JSeparator;
 
 @Service
 public class Visualizador extends JFrame implements ServletContextListener {
@@ -199,6 +201,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	private JLabel labelFiltrosCount;
 	private JLabel labelListenersCount;
 	private JLabel labelModulosCount;
+	private JLabel lblCTA; 
 
 	public JTextArea getTextAreaHandlers() {
 		return textAreaHandlers;
@@ -473,33 +476,39 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	 * Create the frame.
 	 */
 	public Visualizador() {
-		
+
 		// Inicializar el IHM
+
 		this.initFrameVisualizador();
 		this.setExtendedState(6);//MAXIMIZED_BOTH
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-	
 		this.initStructures();
-		//Actualizat info conexion sistemas
-		//this.initInfoConexiones("Madrid");
 		System.out.println("Visualizador arrancando ...");
-		// Inicializar repositorios de modulos 
-		//this.modulosRegistrables = this.initVectorModules(this.comboSistemas.getSelectedItem() + ".csv");
-		
+		choiceCTA();
+		this.setVisible(true);		
+		reloadCatalogos();
+
+	}
+
+	private void choiceCTA() {
 		Vector<String> vCentros = new Vector<String>();
+		
 		vCentros.add("Madrid");
 		vCentros.add("Valladolid");
 		vCentros.add("Valencia");
-		Object selConsulta = JOptionPane.showInputDialog(contentPane, "Seleccione Centro",
-				"Selector de Centro", JOptionPane.QUESTION_MESSAGE, null, vCentros.toArray(),
-				"Seleccione Centro");
-		this.initInfoConexiones((String)selConsulta);
+		Object centro; 
+		do {
+			centro = JOptionPane.showInputDialog(contentPane, "Seleccione Centro",
+					"Selector de Centro", JOptionPane.QUESTION_MESSAGE, null, vCentros.toArray(),
+					"Seleccione Centro");
+		}while(centro==null);
 		
-		reloadCatalogos();
-		
-		this.setVisible(true);
+		this.initInfoConexiones((String)centro);
+		return;
 
+		
 	}
+
 	private void initStructures() {
 		// sistema:socket
 		socketSistemaRegistry = new ConcurrentHashMap<String,DatagramSocket>();
@@ -610,20 +619,29 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			scrollPaneComandos.setViewportBorder(UIManager.getBorder("CheckBox.border"));
 			scrollPaneComandos.setViewportView(jTextAreaComandos);
 			
+			JSeparator separator = new JSeparator();
+			
 			
 			GroupLayout gl_panel_JTextArea_Comandos = new GroupLayout(panel_JTextArea_Comandos);
 			gl_panel_JTextArea_Comandos.setHorizontalGroup(
 				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
 						.addContainerGap()
-						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
-						.addContainerGap())
+						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 1154, Short.MAX_VALUE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+						.addGap(3))
 			);
 			gl_panel_JTextArea_Comandos.setVerticalGroup(
 				gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+						.addGroup(gl_panel_JTextArea_Comandos.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(scrollPaneComandos, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE))
+							.addGroup(gl_panel_JTextArea_Comandos.createSequentialGroup()
+								.addGap(298)
+								.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addContainerGap())
 			);
 			panel_JTextArea_Comandos.setLayout(gl_panel_JTextArea_Comandos);
@@ -633,8 +651,17 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			JButton btnNewButton_1 = new JButton("CONSULTA PLATES TOP 1");
 			btnNewButton_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					//Diagnostica de PTPs Carrusel Alto
+					String originalCommand = "ds";
+					String sistemaCommand = "SCO";
+					String moduloMaquina = "SOR13L-S";
+					String numMaquina = "1";
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
 
-					InfoCommandsMaker infoCommandsMaker = new InfoCommandsMaker();
+					//Diagnostica de PTPs Carrusel Bajo
+					moduloMaquina="SOR13L~S";
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+
 		
 				}
 			});
@@ -718,7 +745,10 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					String sistemaCommand = "SCO";
 					String moduloMaquina = "UpperCnv";
 					String numMaquina = "2";
-					String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+originalCommand; //get all plate label
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+					moduloMaquina="LowerCnv";
+					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+
 					
 				}
 			});
@@ -1308,10 +1338,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		panel_3.setLayout(gl_panel_3);
 
 		JTabbedPane tabbedPane_PostProcess = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_PostProcess.setVisible(false);
-		tabbedPane_PostProcess.setEnabled(false);
+
 		tabbedPane.addTab("PostProcesado", null, tabbedPane_PostProcess, null);
-		tabbedPane.setEnabledAt(2, true);
 
 		JPanel panel = new JPanel();
 		tabbedPane_PostProcess.addTab("Filtering", null, panel, null);
@@ -1905,6 +1933,8 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		JScrollPane scrollPane_PanelSystem = new JScrollPane();
 		scrollPane_PanelSystem.setViewportBorder(UIManager.getBorder("CheckBox.border"));
 		scrollPane_PanelSystem.setViewportView(textArea_System);
+		
+		JSeparator separator_1 = new JSeparator();
 
 		
 		GroupLayout gl_panel_System = new GroupLayout(panel_System);
@@ -1917,16 +1947,23 @@ public class Visualizador extends JFrame implements ServletContextListener {
 							.addComponent(label_panelSystem, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_System.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(scrollPane_PanelSystem, GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)))
-					.addContainerGap())
+							.addComponent(scrollPane_PanelSystem, GroupLayout.DEFAULT_SIZE, 836, Short.MAX_VALUE)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(separator_1, GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+					.addGap(3))
 		);
 		gl_panel_System.setVerticalGroup(
 			gl_panel_System.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_System.createSequentialGroup()
-					.addComponent(label_panelSystem)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPane_PanelSystem, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(22, Short.MAX_VALUE))
+					.addGroup(gl_panel_System.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_System.createSequentialGroup()
+							.addComponent(label_panelSystem)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane_PanelSystem, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_System.createSequentialGroup()
+							.addGap(59)
+							.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(18, Short.MAX_VALUE))
 		);
 		panel_System.setLayout(gl_panel_System);
 		
@@ -1942,31 +1979,39 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		comando = new JTextField();
 		comando.setFont(new Font("Dialog", Font.PLAIN, 14));
 		comando.setColumns(10);
+		
+		lblCTA = new JLabel("Centro de ");
+		
+		lblCTA.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCTA.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_panel_QuickCommand = new GroupLayout(panel_QuickCommand);
 		gl_panel_QuickCommand.setHorizontalGroup(
 			gl_panel_QuickCommand.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_QuickCommand.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_QuickCommand.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnEnviarComando_1, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-						.addComponent(comando, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+					.addGroup(gl_panel_QuickCommand.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblCTA, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+						.addComponent(btnEnviarComando_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+						.addComponent(comando, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_QuickCommand.setVerticalGroup(
 			gl_panel_QuickCommand.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_QuickCommand.createSequentialGroup()
-					.addGap(22)
+					.addGap(19)
+					.addComponent(lblCTA, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(comando, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(40)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnEnviarComando_1)
 					.addContainerGap(18, Short.MAX_VALUE))
 		);
 		panel_QuickCommand.setLayout(gl_panel_QuickCommand);
 
 		JTabbedPane tabbedPane_Filters = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_Filters.setEnabled(true);
+		//tabbedPane_Filters.setEnabled(false);
 		tabbedPane.addTab("Filters", null, tabbedPane_Filters, null);
-		tabbedPane.setEnabledAt(3, true);
+
 
 		JPanel panel_5 = new JPanel();
 		tabbedPane_Filters.addTab("GestionListeners", null, panel_5, null);
@@ -2216,36 +2261,87 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 		//kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 		
-		JPanel jPanelMainComandos = new JPanel();
-
 		this.getContentPane().setLayout(groupLayout);
 
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("Opciones");
-		menuBar.add(mnNewMenu);
+		JMenu mnMenuPerfil = new JMenu("Perfil");
+		menuBar.add(mnMenuPerfil);
 
-		JMenuItem mntmOpcion_1 = new JMenuItem("Opcion2");
-		mnNewMenu.add(mntmOpcion_1);
+		//JMenuItem mntmOpcion_1 = new JMenuItem("Opcion2");
+		//mnNewMenu.add(mntmOpcion_1);
 
-		JMenuItem mntmOpcion = new JMenuItem("Opcion1");
-		mnNewMenu.add(mntmOpcion);
+		//JMenuItem mntmOpcion = new JMenuItem("Rol");
+		//mnNewMenu.add(mntmOpcion);
 
-		JMenu mnNewMnu = new JMenu("New mnu");
-		mnNewMenu.add(mnNewMnu);
+		JMenu mnNewMnu = new JMenu("Rol");
+		mnMenuPerfil.add(mnNewMnu);
 
-		JMenuItem mntmNew_1 = new JMenuItem("New2");
+		JMenuItem mntmNew_1 = new JMenuItem("Technician");
+		mntmNew_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(int i=1; i < 4; i++) {
+					tabbedPane.setEnabledAt(i, false);
+				}
+
+			}
+		});
 		mnNewMnu.add(mntmNew_1);
 
-		JMenuItem mntmNew = new JMenuItem("New1");
+		JMenuItem mntmNew = new JMenuItem("Enginner");
+		
+		//Activacion Perfil Enginner
+		mntmNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JPanel panel = new JPanel();
+				JLabel label = new JLabel("Enter a password:");
+				JPasswordField pass = new JPasswordField(10);
+				panel.add(label);
+				panel.add(pass);
+				String[] options = new String[]{"OK", "Cancel"};
+				int option = JOptionPane.showOptionDialog(null, panel, "Modo Enginner",
+				                         JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+				                         null, options, options[0]);
+				if(option == 0) // pressing OK button
+				{
+				    String password = new String(pass.getPassword());
+					if(password.equals("Password_Enginner")) {
+						JOptionPane.showMessageDialog(null, "Modo Enginner Activado");
+						for(int i=1; i < 4; i++) {
+							tabbedPane.setEnabledAt(i, true);
+						}
+					}
+			
+				}
+
+				
+			}
+		});
 		mnNewMnu.add(mntmNew);
 
-		JMenu mnConfiguracion = new JMenu("Configuracion");
-		menuBar.add(mnConfiguracion);
-		;
+		JMenu menuConfiguracion = new JMenu("Configuracion");
+		//jMenuItem jChoiceCentro = new jMenuItem("Configurar Centro"); 
+		menuBar.add(menuConfiguracion);
+		
+		JMenuItem menuItemChoiceCentro = new JMenuItem("Configurar Centro");
+		menuItemChoiceCentro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				choiceCTA();
+			}
+		});
+		menuConfiguracion.add(menuItemChoiceCentro);
+		
+		tabbedPane.setEnabledAt(1, false);
+		tabbedPane.setEnabledAt(2, false);
+		tabbedPane.setEnabledAt(3, false);
+		
+		
 
 	}
+	
+	
 	public ConcurrentHashMap<String, StatedCommand> getCatalogCommandsRegistry() {
 		return this.catalogCommandsRegistry;
 	}
@@ -2763,7 +2859,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 	private void initInfoConexiones(String centro) {
 		InfoConexionSistema infoSistema;
+		lblCTA.setText("Centro de "+ centro);
 		if(centro=="Madrid") {
+
 			infoSistema = new InfoConexionSistema();
 			//infoSistema.setId("Linea_Entrada1");
 			infoSistema.setCentro(centro);

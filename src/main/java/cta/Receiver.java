@@ -183,7 +183,7 @@ public class Receiver implements Runnable, IReceiver {
 					if(timeNow > statedCommand.getRefTimeInit() + statedCommand.getMaxTimeOut() ) {
 						statedCommand.setStateCommand(STATE_COMMAND.TIMEOUT);
 						vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
-						vis.getjTextAreaComandos().append(System.getProperty("line.separator") + " TIMEOUT " + statedCommand.getNameComando() ); //Imprimimos el test al Textarea
+						vis.getjTextAreaComandos().append(System.getProperty("line.separator") + " TIMEOUT " + keyCommand ); //Imprimimos el test al Textarea
 						log.info("statedCommand " +keyCommand + " TIMEOUT from receiver " + this.getcTarea().getNameSocketSistema());
 						catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
 						continue;
