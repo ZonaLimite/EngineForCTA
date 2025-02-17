@@ -32,80 +32,36 @@ public class InfoCommandsMaker {
 		String maskEndTest1;
 		Vector<String> modelMasks;
 		
-		switch (baseSistemaCommand) { 
-	    case "SCO:1:UpperCnv:gapl": //Get All Plates Labels
+		switch (nameCommand) { 
+	    case "gapl": //Get All Plates Labels
 	    	modelMasks = new Vector<String>();
-	    	mask1 = "CMD UpperCnv -& with [Label:"; 
+	    	mask1 = "CMD "+moduloMaquina+" -& with [Label:"; 
 	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
 
 	    	modelMasks.add(mask1);
 	    	modelMasks.add(mask2);
 	    	
-	    	maskEndTest1 = "CMD UpperCnv - Plate[423] with [Label:";
+	    	maskEndTest1 = "CMD "+moduloMaquina+" - Plate[423] with [Label:";
 	    		
 	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
-	    	statedCommand.setResult("###################### ETIQUETAS LEIDAS DE CUBAS ALTAS ######################## "+ 
+	    	statedCommand.setResult("###################### ETIQUETAS LEIDAS DE "+ moduloMaquina+ "######################## "+ 
 	    			 	 System.getProperty("line.separator") + "|\r");
 
 	     break;
 	     
-	    case "SCO:1:LowerCnv:gapl": //Get All Plates Labels
-	    	modelMasks = new Vector<String>();
-	    	mask1 = "CMD LowerCnv -& with [Label:"; 
-	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
 
-	    	modelMasks.add(mask1);
-	    	modelMasks.add(mask2);
-	    	
-	    	maskEndTest1 = "CMD LowerCnv - Plate[423] with [Label:";
-	    		
-	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
-	    	statedCommand.setResult("###################### ETIQUETAS LEIDAS DE CUBAS BAJAS #########################"+
-	    				System.getProperty("line.separator") + "|\r");;
-
-	     break;
-
-	    case "SCO:2:UpperCnv:gapl": //Get All Plates Labels
-	    	modelMasks = new Vector<String>();
-	    	mask1 = "CMD UpperCnv -& with [Label:"; 
-	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
-
-	    	modelMasks.add(mask1);
-	    	modelMasks.add(mask2);
-	    	
-	    	maskEndTest1 = "CMD UpperCnv - Plate[423] with [Label:";
-	    		
-	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
-	    	statedCommand.setResult("###################### ETIQUETAS LEIDAS DE CUBAS ALTAS ######################## "+ 
-	    			 	 System.getProperty("line.separator") + "|\r");
-
-	     break;
-	     
-	    case "SCO:2:LowerCnv:gapl": //Get All Plates Labels
-	    	modelMasks = new Vector<String>();
-	    	mask1 = "CMD LowerCnv -& with [Label:"; 
-	    	mask2 = "T2kBucketConveyor::onCommandGetAllPlateLabel processed";
-
-	    	modelMasks.add(mask1);
-	    	modelMasks.add(mask2);
-	    	
-	    	maskEndTest1 = "CMD LowerCnv - Plate[423] with [Label:";
-	    		
-	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
-	    	statedCommand.setResult("###################### ETIQUETAS LEIDAS DE CUBAS BAJAS #########################"+
-	    				System.getProperty("line.separator") + "|\r");;
-	     break;
 	    
-	    case "SCO:1:SOR13L-S:ds": //Diagnostica paso Plates UpperCnv
+	    case "ds": //Diagnostica paso Plates UpperCnv
 	    	modelMasks = new Vector<String>();
-	    	mask1 = "CMD SOR13L-S -"; 
+	    	
+	    	mask1 = "CMD SOR"+moduloMaquina+" -"; 
 
 	    	modelMasks.add(mask1);
 	    	
-	    	maskEndTest1 = "CMD SOR13L-S - =============== Total of detection :";
+	    	maskEndTest1 = "CMD SOR"+moduloMaquina+ "- =============== Total of detection :";
 	    		
 	    	statedCommand = new StatedCommand(sistema+":"+maquina,nameCommand,modelMasks,maskEndTest1,10000);
-	    	statedCommand.setResult(	"#################### FALLOS DETECCION PLATES EN CARRUSEL ALTO ####################"+
+	    	statedCommand.setResult(	"#################### FALLOS DETECCION PLATES EN "+ moduloMaquina+"####################"+
 	    				System.getProperty("line.separator") + "|\r");
 
 	     break;

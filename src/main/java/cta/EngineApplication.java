@@ -18,6 +18,8 @@ public class EngineApplication {
 
 		EventQueue.invokeLater(() -> {
 			var vis = ctx.getBean(Visualizador.class);
+			vis.setMyCtx(ctx);
+			
 			vis.reloadCatalogos();
 			// Inicializar repositorios de modulos 
 			vis.modulosRegistrables = vis.initVectorModules(vis.comboSistemas.getSelectedItem() + ".csv");
@@ -25,6 +27,8 @@ public class EngineApplication {
 			vis.setVisible(true);
 			vis.selectSistema("IL");
 		});
+		
+		
 
 	}
 

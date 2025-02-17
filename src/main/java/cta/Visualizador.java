@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -120,6 +121,8 @@ import javax.swing.JScrollBar;
 import java.awt.Rectangle;
 import javax.swing.JLayeredPane;
 import javax.swing.JSeparator;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @Service
 public class Visualizador extends JFrame implements ServletContextListener {
@@ -133,6 +136,16 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	@Value("${uri.file.catalogos}")
 	public String catalogos; //un mapeo a la propertie en application properties
 	
+	
+	private ConfigurableApplicationContext myCtx; 
+	
+	public ConfigurableApplicationContext getMyCtx() {
+		return myCtx;
+	}
+
+	public void setMyCtx(ConfigurableApplicationContext myCtx) {
+		this.myCtx = myCtx;
+	}
 	/**
 	 * 
 	 */
@@ -476,18 +489,27 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	 * Create the frame.
 	 */
 	public Visualizador() {
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				logger.info("Shutdown ...");
+				myCtx.close();
+				System.exit(0);
+
+			}
+		});
 
 		// Inicializar el IHM
 
 		this.initFrameVisualizador();
 		this.setExtendedState(6);//MAXIMIZED_BOTH
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.initStructures();
 		System.out.println("Visualizador arrancando ...");
 		choiceCTA();
 		this.setVisible(true);		
-		reloadCatalogos();
-
+		//reloadCatalogos();
 	}
 
 	private void choiceCTA() {
@@ -505,8 +527,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 		this.initInfoConexiones((String)centro);
 		return;
-
-		
 	}
 
 	private void initStructures() {
@@ -594,7 +614,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		
 	
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		setBounds(100, 100, 1633, 929);
 
@@ -648,28 +668,43 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			
 			JPanel panel_BotonesComandos = new JPanel();
 			
-			JButton btnNewButton_1 = new JButton("CONSULTA PLATES TOP 1");
+			JButton btnNewButton_1 = new JButton("DIAGNOSTICO PTPs TOP 1");
 			btnNewButton_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//Diagnostica de PTPs Carrusel Alto
-					String originalCommand = "ds";
-					String sistemaCommand = "SCO";
-					String moduloMaquina = "SOR13L-S";
-					String numMaquina = "1";
-					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
 
-					//Diagnostica de PTPs Carrusel Bajo
-					moduloMaquina="SOR13L~S";
-					executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+				String originalCommand = "ds";
+				String sistemaCommand = "SCO";
+				String numMaquina = "1";
 
-		
+				String numberSOR=""; // range 01-13
+		    	String ladoSOR="";   // L , R
+		    	String nivelSOR="";  // ~S , -S
+		    	
+		    	for(int side = 1 ; side <= 2; side++) { //Por lado
+		    		if(side==1)ladoSOR="L";
+		    		if(side==2)ladoSOR="R";
+		    		
+		    		for(int level = 1;level <= 2; level ++) { //Por nivel
+		    			if(level==1)nivelSOR="-S";
+		    			if(level==2)nivelSOR="~S";
+		    			
+		    			for(int nSOR = 1 ; nSOR <=13 ;nSOR ++) { //Por nSOR
+		    				if(nSOR<10)numberSOR="0"+nSOR;
+		    				if(nSOR>=10)numberSOR=""+nSOR;
+							String moduloMaquina = "SOR"+numberSOR+ladoSOR+nivelSOR;
+							executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+		    				
+		    			}
+		    		}
+		    	}
 				}
 			});
+			
 			btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
 			btnNewButton_1.setSize(new Dimension(118, 23));
 			btnNewButton_1.setPreferredSize(new Dimension(140, 23));
 			
-			JButton btnNewButton_2 = new JButton("LABELS CUBA TOP 1");
+			JButton btnNewButton_2 = new JButton("ETIQUETAS DE CUBA TOP 1");
 			btnNewButton_2.setHorizontalAlignment(SwingConstants.LEFT);
 			btnNewButton_2.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_2.setSize(new Dimension(120, 24));
@@ -688,11 +723,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 			});
 			
-			JButton btnNewButton_2_1 = new JButton("CONSULTA BUCKETS TOP 1");
-			btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
-			btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
-			btnNewButton_2_1.setActionCommand("");
-			
 			JButton btnNewButton_5 = new JButton("CLEAR");
 			btnNewButton_5.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -704,13 +734,10 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				gl_panel_SCO.createParallelGroup(Alignment.TRAILING)
 					.addGroup(gl_panel_SCO.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.TRAILING)
-							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
-								.addGap(10))
-							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(btnNewButton_5)
-								.addPreferredGap(ComponentPlacement.RELATED)))
+						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+							.addComponent(btnNewButton_5)
+							.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
+						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1174, Short.MAX_VALUE)
 						.addContainerGap())
 			);
@@ -720,11 +747,11 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGap(20)
 						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addGap(10))
-							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 515, Short.MAX_VALUE)
+							.addGroup(Alignment.TRAILING, gl_panel_SCO.createSequentialGroup()
+								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 542, Short.MAX_VALUE)
 								.addComponent(btnNewButton_5)
 								.addGap(22))))
 			);
@@ -732,13 +759,14 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			JButton btnNewButton_1_1 = new JButton("CONSULTA PLATES TOP 2");
 			btnNewButton_1_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
 				}
 			});
 			btnNewButton_1_1.setSize(new Dimension(118, 23));
 			btnNewButton_1_1.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_1_1.setHorizontalAlignment(SwingConstants.LEFT);
 			
-			JButton btnNewButton_2_2 = new JButton("LABELS CUBA TOP 2");
+			JButton btnNewButton_2_2 = new JButton("ETIQUETAS DE CUBA TOP 2");
 			btnNewButton_2_2.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String originalCommand = "gapl";
@@ -755,26 +783,19 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			btnNewButton_2_2.setSize(new Dimension(120, 24));
 			btnNewButton_2_2.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_2_2.setHorizontalAlignment(SwingConstants.LEFT);
-			
-			JButton btnNewButton_2_1_1 = new JButton("CONSULTA BUCKETS TOP 2");
-			btnNewButton_2_1_1.setPreferredSize(new Dimension(140, 23));
-			btnNewButton_2_1_1.setHorizontalAlignment(SwingConstants.LEFT);
-			btnNewButton_2_1_1.setActionCommand("");
 			GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
 			gl_panel_BotonesComandos.setHorizontalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
 						.addContainerGap()
 						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING, false)
-							.addComponent(btnNewButton_2_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addComponent(btnNewButton_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
 						.addGap(18)
 						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING, false)
 							.addComponent(btnNewButton_1_1, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-							.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnNewButton_2_1_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addContainerGap(19, Short.MAX_VALUE))
+							.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addContainerGap(31, Short.MAX_VALUE))
 			);
 			gl_panel_BotonesComandos.setVerticalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
@@ -787,11 +808,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton_2_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(5)
-						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnNewButton_2_1_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(8))
+						.addGap(36))
 			);
 			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
 			panel_SCO.setLayout(gl_panel_SCO);
@@ -2337,10 +2354,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		tabbedPane.setEnabledAt(2, false);
 		tabbedPane.setEnabledAt(3, false);
 		
-		
-
 	}
-	
 	
 	public ConcurrentHashMap<String, StatedCommand> getCatalogCommandsRegistry() {
 		return this.catalogCommandsRegistry;
@@ -2681,15 +2695,12 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	private void executeCommand(String sistemaCommand, String numMaquina, String moduloMaquina, String originalCommand) {
 		String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+moduloMaquina+":"+originalCommand; //get all plate label
 
-
-
 		StatedCommand statedCommand = infoCommandsMaker.makeFactoryCommand(originalCommand,sistemaCommand, moduloMaquina,numMaquina);
 		catalogCommandsRegistry.put(keyStatedCommand, statedCommand);
 		logger.info("Registrado comando "+ keyStatedCommand);
 		prepareLaunchCommand(sistemaCommand,originalCommand,numMaquina);
 		enviarComando("sc "+moduloMaquina+" "+originalCommand,sistemaCommand+":"+numMaquina);
 
-		
 	}
 	
 	
@@ -3698,14 +3709,16 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		}*/
 		String ruta = catalogos;
 		String fichero = ruta + FileSystems.getDefault().getSeparator() + "catalogoConsultas.def";
-		logger.info("Ruta para leer Catalogo:" + fichero);
+		
 		////////////////////////////////////////////////////////////////////
 		// En busca de los ficheros de serializacion del catalogo consultas/
 		///////////////////////////////////////////////////////////////////
 		try {
 			// Se crea un ObjectInputStream
 			FileInputStream fis = null;
-			fis = new FileInputStream(new File(fichero));
+			File file = new File(fichero);
+			logger.info("Ruta para leer Catalogo:" + file.getAbsolutePath());
+			fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 
 			// Se lee el primer objeto
