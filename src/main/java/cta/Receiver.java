@@ -55,7 +55,7 @@ public class Receiver implements Runnable, IReceiver {
 			e.printStackTrace();
 		}
 		
-		int sizeBufferDatagramPacket = 2024; // 8 Kbytes
+		int sizeBufferDatagramPacket = 16384; // 8 Kbytes
 		//int sizeReadBytes = 2048;
 		String[] sArrayFilter = null;
 

@@ -686,13 +686,19 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		    		
 		    		for(int level = 1;level <= 2; level ++) { //Por nivel
 		    			if(level==1)nivelSOR="-S";
-		    			if(level==2)nivelSOR="~S";
+		    			if(level==2)nivelSOR="~5";
 		    			
 		    			for(int nSOR = 1 ; nSOR <=13 ;nSOR ++) { //Por nSOR
 		    				if(nSOR<10)numberSOR="0"+nSOR;
 		    				if(nSOR>=10)numberSOR=""+nSOR;
 							String moduloMaquina = "SOR"+numberSOR+ladoSOR+nivelSOR;
 							executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 		    				
 		    			}
 		    		}
@@ -736,32 +742,64 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addContainerGap()
 						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
 							.addComponent(btnNewButton_5)
-							.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
+							.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1174, Short.MAX_VALUE)
+						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
 						.addContainerGap())
 			);
 			gl_panel_SCO.setVerticalGroup(
 				gl_panel_SCO.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_SCO.createSequentialGroup()
 						.addGap(20)
-						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.TRAILING)
 							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
 								.addGap(10))
-							.addGroup(Alignment.TRAILING, gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 542, Short.MAX_VALUE)
+							.addGroup(gl_panel_SCO.createSequentialGroup()
+								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
 								.addComponent(btnNewButton_5)
 								.addGap(22))))
 			);
 			
-			JButton btnNewButton_1_1 = new JButton("CONSULTA PLATES TOP 2");
+			JButton btnNewButton_1_1 = new JButton("DIAGNOSTICO PTPSs TOP 2");
 			btnNewButton_1_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
-				}
+					String originalCommand = "ds";
+					String sistemaCommand = "SCO";
+					String numMaquina = "2";
+
+					String numberSOR=""; // range 01-13
+			    	String ladoSOR="";   // L , R
+			    	String nivelSOR="";  // ~S , -S
+			    	
+			    	for(int side = 1 ; side <= 2; side++) { //Por lado
+			    		if(side==1)ladoSOR="L";
+			    		if(side==2)ladoSOR="R";
+			    		
+			    		for(int level = 1;level <= 2; level ++) { //Por nivel
+			    			if(level==1)nivelSOR="-S";
+			    			if(level==2)nivelSOR="~5";
+			    			
+			    			for(int nSOR = 1 ; nSOR <=13 ;nSOR ++) { //Por nSOR
+			    				if(nSOR<10)numberSOR="0"+nSOR;
+			    				if(nSOR>=10)numberSOR=""+nSOR;
+								String moduloMaquina = "SOR"+numberSOR+ladoSOR+nivelSOR;
+								executeCommand(sistemaCommand, numMaquina, moduloMaquina, originalCommand);
+								try {
+									Thread.sleep(20);
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+			    				
+			    			}
+			    		}
+			    	}
+					}
 			});
+			
+			
 			btnNewButton_1_1.setSize(new Dimension(118, 23));
 			btnNewButton_1_1.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_1_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -783,19 +821,27 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			btnNewButton_2_2.setSize(new Dimension(120, 24));
 			btnNewButton_2_2.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_2_2.setHorizontalAlignment(SwingConstants.LEFT);
+			
+			JButton btnNewButton_2_1 = new JButton("ETIQUETAS DE CUBA TOP 1");
+			btnNewButton_2_1.setSize(new Dimension(120, 24));
+			btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
+			btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
 			GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
 			gl_panel_BotonesComandos.setHorizontalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING, false)
-							.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnNewButton_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
-						.addGap(18)
-						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(btnNewButton_1_1, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-							.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addContainerGap(31, Short.MAX_VALUE))
+						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
+								.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(btnNewButton_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 171, Short.MAX_VALUE))
+								.addGap(18)
+								.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING, false)
+									.addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 181, Short.MAX_VALUE)
+									.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+							.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 			);
 			gl_panel_BotonesComandos.setVerticalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
@@ -808,7 +854,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton_2_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(36))
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+						.addGap(154))
 			);
 			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
 			panel_SCO.setLayout(gl_panel_SCO);
