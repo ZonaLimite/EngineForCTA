@@ -39,6 +39,7 @@ public class Receiver implements Runnable, IReceiver {
 
 	public void run() {
 		// Registrar este receiver para el sistema dado (max. 3 hilos)
+		log.info("Thread de "+ cTarea.getNameSocketSistema() +"running ...");
 		Vector<Receiver> vThreads = vis.getThreadReceiverRegistry().get(cTarea.getNameSocketSistema());
 		vThreads.add(this);
 		catalogCommandregistry = vis.getCatalogCommandsRegistry();
@@ -47,24 +48,23 @@ public class Receiver implements Runnable, IReceiver {
 
 		String cadenaMensaje;
 		algoritmos = new Algoritmos();
-
+		
+		int sizeBuffer=2048;;
 		try {
-			log.info("Tama�o ajustado de buffer DatagramSocket :" + mySocket.getReceiveBufferSize());
+			sizeBuffer =  mySocket.getReceiveBufferSize(); //Ajustado a implementacion del sistema propietario
+			log.info("Tama�o ajustado de buffer DatagramSocket :" + sizeBuffer);
 			log.info("Desde Hilo " + cTarea.getNameSocketSistema() + " trabajando " + cTarea.getNombreConsultaFull());
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		
-		int sizeBufferDatagramPacket = 16384; // 8 Kbytes
-		//int sizeReadBytes = 2048;
+	
 		String[] sArrayFilter = null;
 
 		
 		do {
-			byte[] RecogerServidor_bytes = new byte[sizeBufferDatagramPacket];
+			byte[] RecogerServidor_bytes = new byte[sizeBuffer];
 
 			try {
-
 
 				DatagramPacket servPaquete = new DatagramPacket(RecogerServidor_bytes, RecogerServidor_bytes.length);
 				mySocket.receive(servPaquete);

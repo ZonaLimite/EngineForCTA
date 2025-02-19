@@ -84,7 +84,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.awt.event.ActionEvent;
@@ -186,7 +187,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	
 	//private ConcurrentHashMap<String>
 	
-	private int maxThreadBySistema = 1;
+	private int maxThreadBySistema = 3;
 	
 	private String[] catalogListener = { "" };
 	private JTextField textfield_Mask;
@@ -742,9 +743,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addContainerGap()
 						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.LEADING)
 							.addComponent(btnNewButton_5)
-							.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
+							.addComponent(panel_BotonesComandos, GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
+						.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
 						.addContainerGap())
 			);
 			gl_panel_SCO.setVerticalGroup(
@@ -753,11 +754,11 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGap(20)
 						.addGroup(gl_panel_SCO.createParallelGroup(Alignment.TRAILING)
 							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+								.addComponent(panel_JTextArea_Comandos, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addGap(10))
 							.addGroup(gl_panel_SCO.createSequentialGroup()
-								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
+								.addComponent(panel_BotonesComandos, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 539, Short.MAX_VALUE)
 								.addComponent(btnNewButton_5)
 								.addGap(22))))
 			);
@@ -821,27 +822,19 @@ public class Visualizador extends JFrame implements ServletContextListener {
 			btnNewButton_2_2.setSize(new Dimension(120, 24));
 			btnNewButton_2_2.setPreferredSize(new Dimension(140, 23));
 			btnNewButton_2_2.setHorizontalAlignment(SwingConstants.LEFT);
-			
-			JButton btnNewButton_2_1 = new JButton("ETIQUETAS DE CUBA TOP 1");
-			btnNewButton_2_1.setSize(new Dimension(120, 24));
-			btnNewButton_2_1.setPreferredSize(new Dimension(140, 23));
-			btnNewButton_2_1.setHorizontalAlignment(SwingConstants.LEFT);
 			GroupLayout gl_panel_BotonesComandos = new GroupLayout(panel_BotonesComandos);
 			gl_panel_BotonesComandos.setHorizontalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
 					.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
-							.addGroup(gl_panel_BotonesComandos.createSequentialGroup()
-								.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING, false)
-									.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(btnNewButton_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 171, Short.MAX_VALUE))
-								.addGap(18)
-								.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING, false)
-									.addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 181, Short.MAX_VALUE)
-									.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-							.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.TRAILING, false)
+							.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(btnNewButton_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 171, Short.MAX_VALUE))
+						.addGap(18)
+						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(btnNewButton_1_1, GroupLayout.PREFERRED_SIZE, 181, Short.MAX_VALUE)
+							.addComponent(btnNewButton_2_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addContainerGap(42, Short.MAX_VALUE))
 			);
 			gl_panel_BotonesComandos.setVerticalGroup(
 				gl_panel_BotonesComandos.createParallelGroup(Alignment.LEADING)
@@ -854,9 +847,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						.addGroup(gl_panel_BotonesComandos.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton_2_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnNewButton_2_1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addGap(154))
+						.addGap(183))
 			);
 			panel_BotonesComandos.setLayout(gl_panel_BotonesComandos);
 			panel_SCO.setLayout(gl_panel_SCO);
@@ -2827,16 +2818,22 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	
 	
 	private void instanciarReceiver(DatagramSocket socket,ConsultaTarea cTarea) {
-	
+		
 			if(threadReceiverRegistry.get(cTarea.getNameSocketSistema())==null) {
-				Vector<Receiver> vThread = new Vector<Receiver>();
+
 				//No hay que controlar aqui porque es el primero en a�adir
 				Receiver runReceiver = new Receiver(socket, this, cTarea, webSocket);
+				Vector<Receiver> vThread = new Vector<Receiver>();
 				Thread threadReceiver = new Thread(runReceiver);
-				threadReceiver.start();
-				//vThread.add(threadReceiver);
+				//ExecutorService exec = Executors.newSingleThreadExecutor();
+				//exec.execute(runReceiver);
 				threadReceiverRegistry.put(cTarea.getNameSocketSistema(), vThread);
-				logger.info("Inicializando Procesamiento thread de "+ cTarea.getNameSocketSistema());
+				threadReceiver.setPriority(Thread.MAX_PRIORITY);
+				threadReceiver.start();
+				// todo este control se hace ya desed el hilo arrancado	
+				// vThread.add(runReceiver);
+				//refreshLedsSocketsStatus();
+				return;
 				
 			}else {
 				//Controlo si el vector de Threads tiene mas que el maximo de hilos permitidos por sistema
@@ -2847,10 +2844,14 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				}else {
 					Receiver runReceiver = new Receiver(socket, this, cTarea , webSocket);
 					Thread threadReceiver = new Thread(runReceiver);
+					threadReceiver.setPriority(Thread.MAX_PRIORITY);
 					threadReceiver.start();
+					//logger.info("Añadiendo Procesamiento paralelo thread de "+ cTarea.getNameSocketSistema());
+					refreshLedsSocketsStatus();
+					return;
 				}
 			}
-		refreshLedsSocketsStatus();
+		
 		
 	}
 
