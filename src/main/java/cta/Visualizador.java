@@ -2847,7 +2847,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 					threadReceiver.setPriority(Thread.MAX_PRIORITY);
 					threadReceiver.start();
 					//logger.info("Añadiendo Procesamiento paralelo thread de "+ cTarea.getNameSocketSistema());
-					refreshLedsSocketsStatus();
 					return;
 				}
 			}
