@@ -187,7 +187,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	
 	//private ConcurrentHashMap<String>
 	
-	private int maxThreadBySistema = 3;
+	private int maxThreadBySistema = 1;
 	
 	private String[] catalogListener = { "" };
 	private JTextField textfield_Mask;

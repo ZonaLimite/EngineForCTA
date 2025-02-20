@@ -39,11 +39,12 @@ public class Receiver implements Runnable, IReceiver {
 
 	public void run() {
 		// Registrar este receiver para el sistema dado (max. 3 hilos)
-		log.info("Thread de "+ cTarea.getNameSocketSistema() +"running ...");
-		Vector<Receiver> vThreads = vis.getThreadReceiverRegistry().get(cTarea.getNameSocketSistema());
+		String nameSocketSistema= cTarea.getNameSocketSistema();
+		log.info("Thread de "+ nameSocketSistema  +"running ...");
+		Vector<Receiver> vThreads = vis.getThreadReceiverRegistry().get(nameSocketSistema);
 		vThreads.add(this);
 		catalogCommandregistry = vis.getCatalogCommandsRegistry();
-		vis.getThreadReceiverRegistry().put(cTarea.getNameSocketSistema(), vThreads);
+		vis.getThreadReceiverRegistry().put(nameSocketSistema, vThreads);
 		vis.refreshLedsSocketsStatus();
 
 		String cadenaMensaje;
@@ -51,9 +52,9 @@ public class Receiver implements Runnable, IReceiver {
 		
 		int sizeBuffer=2048;;
 		try {
-			sizeBuffer =  mySocket.getReceiveBufferSize(); //Ajustado a implementacion del sistema propietario
+			sizeBuffer =  mySocket.getReceiveBufferSize() / 2; //Ajustado a implementacion del sistema propietario
 			log.info("Tama�o ajustado de buffer DatagramSocket :" + sizeBuffer);
-			log.info("Desde Hilo " + cTarea.getNameSocketSistema() + " trabajando " + cTarea.getNombreConsultaFull());
+			log.info("Desde Hilo " + nameSocketSistema + " trabajando " + cTarea.getNombreConsultaFull());
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -82,11 +83,13 @@ public class Receiver implements Runnable, IReceiver {
 					//A�adimos identificador de sistema origen a la cadena
 					cadenaMensaje = cTarea.getNameSocketSistema().concat(" "+cadenaMensaje);
 
+					//Posible hilo
 					checkCommands(cadenaMensaje);   
 					
 					// Filtrar por catalogo de filtros texto (normalmente por cada linea)
 					sArrayFilter = vis.getCatalogFiltersRegistry(nameConsulta);
 					if (algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
+						//Posible hilo
 						handlerWriteLine(cadenaMensaje);
 					}
 				}
@@ -175,26 +178,27 @@ public class Receiver implements Runnable, IReceiver {
 				StatedCommand statedCommand =  vis.getCatalogCommandsRegistry().get(keyCommand);
 				String sistemaComando = statedCommand.getSistemaComando();
 				STATE_COMMAND state = statedCommand.getStateCommand(); 
+				String nameSocketSistema = cTarea.getNameSocketSistema();
 				
 			
 				//EL stateComand esta HANDLED y se ha pasado el tiempo de procesamiento sin resultado FINALIZED
-				if(state == STATE_COMMAND.HANDLED & sistemaComando.equals(cTarea.getNameSocketSistema())) {
+				if(state == STATE_COMMAND.HANDLED & sistemaComando.equals(nameSocketSistema)) {
 					long timeNow = new Date().getTime();
 					if(timeNow > statedCommand.getRefTimeInit() + statedCommand.getMaxTimeOut() ) {
 						statedCommand.setStateCommand(STATE_COMMAND.TIMEOUT);
 						vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
 						vis.getjTextAreaComandos().append(System.getProperty("line.separator") + " TIMEOUT " + keyCommand ); //Imprimimos el test al Textarea
-						log.info("statedCommand " +keyCommand + " TIMEOUT from receiver " + this.getcTarea().getNameSocketSistema());
+						log.info("statedCommand " +keyCommand + " TIMEOUT from receiver " + nameSocketSistema);
 						catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
 						continue;
 					}
 				}
 				
 				//El stateCommand esta DECLARED y coincide con el sistema base. Se cambia a estado HANLED y se hace Owner a este receiver.
-				if(state == STATE_COMMAND.DECLARED & sistemaComando.equals(cTarea.getNameSocketSistema())) {
+				if(state == STATE_COMMAND.DECLARED & sistemaComando.equals(nameSocketSistema)) {
 					statedCommand.setOwner(this);
 					statedCommand.setStateCommand(STATE_COMMAND.HANDLED);
-					log.info("statedCommand " + keyCommand + " HANDLED for receiver " + this.getcTarea().getNameSocketSistema());
+					log.info("statedCommand " + keyCommand + " HANDLED for receiver " + nameSocketSistema);
 				}
 				
 				// El stateCommand esta HANDLED y este receiver es su OWnwer. 
@@ -217,7 +221,7 @@ public class Receiver implements Runnable, IReceiver {
 							statedCommand.setStateCommand(STATE_COMMAND.FINALIZED);
 							vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
 							catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
-							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " + this.getcTarea().getNameSocketSistema());
+							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " + nameSocketSistema);
 							continue; //ya no hace falta seguir
 						
 						}
@@ -228,7 +232,7 @@ public class Receiver implements Runnable, IReceiver {
 							statedCommand.setStateCommand(STATE_COMMAND.FINALIZED);
 							vis.getjTextAreaComandos().append(statedCommand.getResult()); //Imprimimos el test al Textarea
 							catalogCommandregistry.remove(keyCommand);//iteratorKeysCommands.remove(); // eliminamos este comando del registro	
-							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " + this.getcTarea().getNameSocketSistema());
+							log.info("statedCommand " + keyCommand + " FINALIZED for receiver " +nameSocketSistema);
 							continue; //ya no hace falta seguir
 						}
 					}
