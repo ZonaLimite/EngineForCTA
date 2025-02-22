@@ -2416,12 +2416,11 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		}else {
 			Consulta virtual = new Consulta(sistemaCommand,nameCommand);
 			String keyConsulta = virtual.getNombreConsultaFull();
-			catalogoConsultas.put(keyConsulta, virtual);
+			//catalogoConsultas.put(keyConsulta, virtual);
 			catalogFiltersRegistry.put(keyConsulta, makeCatalogFilter(virtual));
 			logger.info("Actualizado catalogo de filtros para la consulta: "+keyConsulta);
 			
 			ConsultaTarea cTareaConnectChecks = new ConsultaTarea(virtual,numMaquina, null);
-
 			connectMixto(cTareaConnectChecks);
 		}
 
@@ -2432,12 +2431,11 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		Integer flagDisconnnectSistema = flagDisconnectRegistry.get(sistemaCommand+":"+numMaquina);
 		if(flagDisconnnectSistema==null ) {
 			logger.info("No hay conexion registrada para "+sistemaCommand+":"+numMaquina+", conectando ...");
-			prepareConnection(sistemaCommand,nameCommand,numMaquina);
 
 		}else {
-				logger.info("Reconectando sobre sistema "+sistemaCommand+":"+numMaquina+", conectando ...");
-				prepareConnection(sistemaCommand,nameCommand,numMaquina);
+			logger.info("Reconectando sobre sistema "+sistemaCommand+":"+numMaquina+", conectando ...");
 		}
+		prepareConnection(sistemaCommand,nameCommand,numMaquina);
 	}
 
 	
@@ -2732,14 +2730,17 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	}
 	
 	private void executeCommand(String sistemaCommand, String numMaquina, String moduloMaquina, String originalCommand) {
-		String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+moduloMaquina+":"+originalCommand; //get all plate label
-
+	
+		String keyStatedCommand = sistemaCommand+":"+numMaquina+":"+moduloMaquina+":"+originalCommand; 
+		
+		// Crea el stateCommand que sera manejado en el Receiver y lo registra
 		StatedCommand statedCommand = infoCommandsMaker.makeFactoryCommand(originalCommand,sistemaCommand, moduloMaquina,numMaquina);
 		catalogCommandsRegistry.put(keyStatedCommand, statedCommand);
 		logger.info("Registrado comando "+ keyStatedCommand);
+		
 		prepareLaunchCommand(sistemaCommand,originalCommand,numMaquina);
+		
 		enviarComando("sc "+moduloMaquina+" "+originalCommand,sistemaCommand+":"+numMaquina);
-
 	}
 	
 	
@@ -2830,9 +2831,6 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				threadReceiverRegistry.put(cTarea.getNameSocketSistema(), vThread);
 				threadReceiver.setPriority(Thread.MAX_PRIORITY);
 				threadReceiver.start();
-				// todo este control se hace ya desed el hilo arrancado	
-				// vThread.add(runReceiver);
-				//refreshLedsSocketsStatus();
 				return;
 				
 			}else {
