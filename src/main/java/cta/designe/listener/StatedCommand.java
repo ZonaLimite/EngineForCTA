@@ -11,12 +11,13 @@ public class StatedCommand {
 	String nameComando;                 	//El nombre del comando para ejecutar 
 	STATE_COMMAND stateCommand;          	//El Estado del comando
 	Vector<String> modelMasks;            	//El conjunto de mascaras que definen las lineas de salida del comando
-    IReceiver Owner; 						//El Receiver Owner
+    IReceiver Owner; 						//El Receiver Owner (Esto lo pone el receiver)
 	String maskEndTest; 					//La mascara definitoria de final de comando o test alcanzado
 	long maxTimeOut; 						//EL tiempo transcurrido maximo permitido (TimeOut)
-	long refTimeInit; 						//El tiempo de inicializacion del comando (Debe haber un receiver activo)
+	long refTimeInit; 						//El tiempo inicial del comando (Debe haber un receiver activo)
 	String result; 							//La deteccion de lineas de comando se concatenara en un String result
 	String titulo;							//Un titulo a modo de break para separar Comandos
+	
 	public StatedCommand(String sistemaComando, String nameComando,	 Vector<String> modelMasks, String maskEndTest,long maxTimeOut) {
 		this.sistemaComando=sistemaComando;
 		this.nameComando=nameComando;
