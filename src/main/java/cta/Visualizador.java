@@ -519,6 +519,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		vCentros.add("Madrid");
 		vCentros.add("Valladolid");
 		vCentros.add("Valencia");
+		vCentros.add("Granada");		
 		Object centro; 
 		do {
 			centro = JOptionPane.showInputDialog(contentPane, "Seleccione Centro",
@@ -3082,6 +3083,90 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 			refreshLedsSocketsStatus();
 		}
+		
+		if(centro=="Granada") {
+			
+			infoSistema = new InfoConexionSistema();
+			//infoSistema.setId("Linea_Entrada1");
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.15.139");
+			infoSistema.setNameSocketSistema("PC:1");
+			infoSistema.setTopNumero(1);
+			this.infoConexionRegistry.put("PC:1", infoSistema);
+			this.ledSocketRegistry.put("PC:1", chckbxTOP1_PC);	
+			this.numThreadsLabel.put("PC:1", lblCountThreads_PC_1);
+
+			infoSistema = new InfoConexionSistema();
+			//infoSistema.setId("Linea_Entrada1");
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.15.149");
+			infoSistema.setNameSocketSistema("PC:2");
+			infoSistema.setTopNumero(2);
+			this.infoConexionRegistry.put("PC:2", infoSistema);
+			this.ledSocketRegistry.put("PC:2", chckbxTOP2_PC);	
+			this.numThreadsLabel.put("PC:2", lblCountThreads_PC_2);
+
+			
+			infoSistema = new InfoConexionSistema();
+			//infoSistema.setId("Linea_Entrada1");
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.12.139");
+			infoSistema.setNameSocketSistema("IL:1");
+			infoSistema.setTopNumero(1);
+			this.infoConexionRegistry.put("IL:1", infoSistema);
+			this.ledSocketRegistry.put("IL:1", chckbxTOP1_IL);	
+			this.numThreadsLabel.put("IL:1", lblCountThreads_IL_1);
+			
+
+			infoSistema = new InfoConexionSistema();
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.12.149");
+			infoSistema.setNameSocketSistema("IL:2");
+			infoSistema.setTopNumero(2);
+			this.infoConexionRegistry.put("IL:2", infoSistema);
+			this.ledSocketRegistry.put("IL:2", chckbxTOP2_IL);
+			this.numThreadsLabel.put("IL:2", lblCountThreads_IL_2);			
+			
+			infoSistema = new InfoConexionSistema();
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.13.139");
+			infoSistema.setNameSocketSistema("SCO:1");
+			infoSistema.setTopNumero(1);
+			this.infoConexionRegistry.put("SCO:1", infoSistema);
+			this.ledSocketRegistry.put("SCO:1", chckbxTOP1_SCO);
+			this.numThreadsLabel.put("SCO:1", lblCountThreads_SCO_1);
+			
+			infoSistema = new InfoConexionSistema();
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.13.149");
+			infoSistema.setNameSocketSistema("SCO:2");
+			infoSistema.setTopNumero(2);
+			this.infoConexionRegistry.put("SCO:2", infoSistema);
+			this.ledSocketRegistry.put("SCO:2", chckbxTOP2_SCO);
+			this.numThreadsLabel.put("SCO:2", lblCountThreads_SCO_2);
+			
+			infoSistema = new InfoConexionSistema();
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.14.139");
+			infoSistema.setNameSocketSistema("ATHS:1");
+			infoSistema.setTopNumero(1);
+			this.infoConexionRegistry.put("ATHS:1", infoSistema);
+			this.ledSocketRegistry.put("ATHS:1", chckbxTOP1_ATHS);
+			this.numThreadsLabel.put("ATHS:1", lblCountThreads_ATHS_1);			
+			
+			infoSistema = new InfoConexionSistema();
+			infoSistema.setCentro(centro);
+			infoSistema.setIp("21.14.14.149");
+			infoSistema.setNameSocketSistema("ATHS:2");
+			infoSistema.setTopNumero(2);
+			this.infoConexionRegistry.put("ATHS:2", infoSistema);
+			this.ledSocketRegistry.put("ATHS:2", chckbxTOP2_ATHS);	
+			this.numThreadsLabel.put("ATHS:2", lblCountThreads_ATHS_2);	
+
+			refreshLedsSocketsStatus();
+		}
+		
+
 		if(centro=="Valencia") {
 			
 			infoSistema = new InfoConexionSistema();
