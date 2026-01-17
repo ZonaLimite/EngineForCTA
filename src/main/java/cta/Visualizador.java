@@ -75,10 +75,12 @@ import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -96,6 +98,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
@@ -1460,17 +1464,12 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				sFilters[0] = FilterByIdValue.getText();
 				sFilters[1] = FilterByIdValue.getText().toLowerCase();
 
-				// filtrar
-				//System.out.println("antes:" + cadenasFiltradas.peek());
+				List<String> snapshot;
 				synchronized (cadenasFiltradas) {
-					
-					textPane.setText(filterLines(cadenasFiltradas, sFilters));
+					snapshot = new ArrayList<>(cadenasFiltradas);
 				}
-				
-				//System.out.println("despues:" + cadenasFiltradas.peek());
-				
-				// colorear
-				colorearSelected(textPane, sFilters, Color.red);
+
+				new FilterWorker(snapshot, sFilters, true).execute();
 			}
 		});
 
@@ -1480,21 +1479,15 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		JButton btnNewdesconectar = new JButton("Select por ID");
 		btnNewdesconectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				// System.out.println("antesSelect:"+cadenasFiltradas.get(cadenasFiltradas.size()-1));
 				String[] sSelects = new String[1];
 				sSelects[0] = selectByIdValue.getText();
-			
-				// Al loro con el synchronized
+
+				List<String> snapshot;
 				synchronized (cadenasFiltradas) {
-					textPane.setText(filterLines(cadenasFiltradas, ""));
+					snapshot = new ArrayList<>(cadenasFiltradas);
 				}
-				// Coloca el cursor en la primera aparicion encontrada de selectByIdValue
-				try {
-					textPane.setCaretPosition(colorearSelected(textPane, sSelects, Color.red));
-				} catch (java.lang.IllegalArgumentException iae) {
-					textPane.setText("Nada encontrado");
-				}
+
+				new FilterWorker(snapshot, sSelects, false).execute();
 			}
 		});
 
@@ -4178,4 +4171,94 @@ public class Visualizador extends JFrame implements ServletContextListener {
     	this.setVisible(false);
     	//System.exit(0);// Here - what you want to do that context shutdown    
    }
+
+	private class FilterResult {
+		String text;
+		List<int[]> highlights;
+		int firstMatchPos;
+
+		public FilterResult(String text, List<int[]> highlights, int firstMatchPos) {
+			this.text = text;
+			this.highlights = highlights;
+			this.firstMatchPos = firstMatchPos;
+		}
+	}
+
+	private class FilterWorker extends SwingWorker<FilterResult, Void> {
+		private List<String> inputLines;
+		private String[] filters;
+		private boolean isFilterMode; // true = filter rows, false = show all
+
+		public FilterWorker(List<String> inputLines, String[] filters, boolean isFilterMode) {
+			this.inputLines = inputLines;
+			this.filters = filters;
+			this.isFilterMode = isFilterMode;
+		}
+
+		@Override
+		protected FilterResult doInBackground() throws Exception {
+			StringBuilder sb = new StringBuilder();
+			List<int[]> highlights = new ArrayList<>();
+			int firstMatch = -1;
+			Algoritmos algoritmo = new Algoritmos();
+			String lineSeparator = System.getProperty("line.separator");
+
+			for (String line : inputLines) {
+				boolean include = true;
+				if (isFilterMode) {
+					include = algoritmo.filterMatch(line, filters, true);
+				}
+
+				if (include) {
+					int lineStartOffset = sb.length();
+					sb.append(line).append(lineSeparator);
+
+					// Calculate highlights
+					for (String filter : filters) {
+						if (filter == null || filter.isEmpty())
+							continue;
+
+						Vector<Splited> matches = algoritmo.splitedMatch(line, lineStartOffset, filter);
+						if (matches != null) {
+							if (firstMatch == -1 && !matches.isEmpty()) {
+								firstMatch = matches.get(0).getIndexSplitedString();
+							}
+							for (Splited s : matches) {
+								highlights.add(new int[] { s.getIndexSplitedString(), s.getSplitedString().length() });
+							}
+						}
+					}
+				}
+			}
+			return new FilterResult(sb.toString(), highlights, firstMatch);
+		}
+
+		@Override
+		protected void done() {
+			try {
+				FilterResult result = get();
+				textPane.setText(result.text);
+
+				SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+				StyleConstants.setForeground(attributeSet, Color.RED);
+				StyledDocument doc = textPane.getStyledDocument();
+
+				for (int[] h : result.highlights) {
+					doc.setCharacterAttributes(h[0], h[1], attributeSet, false);
+				}
+
+				if (!isFilterMode) { // select mode
+					if (result.firstMatchPos != -1) {
+						textPane.setCaretPosition(result.firstMatchPos);
+					} else {
+						// Optional: handle not found
+					}
+				}
+
+			} catch (Exception e) {
+				logger.error("Error in SearchTask", e);
+			}
+		}
+	}
+   
 }
