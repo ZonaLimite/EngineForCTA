@@ -30,12 +30,13 @@ public class Algoritmos {
 	
 	public Vector<Splited> splitedMatch(String cadenaAnalizada, int inicialIndexLinea , String sSelected){
 		Vector<Splited> vSpliteds =  new Vector<Splited>();
-		
+		int pos;
+
 		if (sSelected.contains("&")) {
 			String criteriosBusqueda[] = sSelected.split("&");
 			int testCopulativo = 0;
 			for (String criterio : criteriosBusqueda) {
-				int pos = cadenaAnalizada.indexOf(criterio, 0);
+				pos = cadenaAnalizada.indexOf(criterio, 0);
 				if( pos != -1) {
 					Splited splited  = new Splited (criterio, (pos+inicialIndexLinea));
 					vSpliteds.add(splited);
@@ -47,7 +48,8 @@ public class Algoritmos {
 		}else {
 			
 			int contadorMatchs = 0;
-			int pos = cadenaAnalizada.indexOf(sSelected, 0);
+			pos = cadenaAnalizada.indexOf(sSelected, 0);
+
 			while(pos != -1) {
 				contadorMatchs++;
 				Splited splited  = new Splited (sSelected, (pos+inicialIndexLinea));
