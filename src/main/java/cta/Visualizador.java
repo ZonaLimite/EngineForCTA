@@ -21,10 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import cta.designe.listener.Algoritmos;
@@ -32,7 +30,6 @@ import cta.designe.listener.EventMask;
 import cta.designe.listener.ModelFilter;
 import cta.designe.listener.Splited;
 import cta.designe.listener.StatedCommand;
-import cta.InfoCommandsMaker;
 //import cta.designe.listener.TableListenerModel;
 import cta.designe.listener.TableListenerModel;
 import cta.remote.stompbroker.ModelResultData;
@@ -44,7 +41,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ListModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -62,14 +58,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
@@ -79,17 +72,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
@@ -105,7 +94,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextPane;
-import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
@@ -122,9 +110,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 import javax.swing.JFileChooser;
-import javax.swing.JScrollBar;
-import java.awt.Rectangle;
-import javax.swing.JLayeredPane;
 import javax.swing.JSeparator;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -918,7 +903,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		});
 		btnNewButton_4.setFont(new Font("Dialog", Font.PLAIN, 12));
 
-		listaTareas = new JList();
+		listaTareas = new JList<>();
 		listaTareas.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		JScrollPane scrollPaneListaTareas = new JScrollPane();
 		scrollPaneListaTareas.setBorder(null);
@@ -1039,7 +1024,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		});
 		btnBorrar.setFont(new Font("Dialog", Font.PLAIN, 12));
 
-		combo_Modulos = new JComboBox();
+		combo_Modulos = new JComboBox<>();
 		combo_Modulos.setMaximumSize(new Dimension(40, 32767));
 		combo_Modulos.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
@@ -4391,9 +4376,9 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				}
 
 				if (include) {
-					//Compute line start offset
+					// Compute line start offset
 					lineStartOffset = (sb.length() - (offsetMultiplier * lineSeparator.length()) + offsetMultiplier);
-					
+
 					sb.append(line).append(lineSeparator);
 
 					// Calculate highlights
@@ -4401,10 +4386,10 @@ public class Visualizador extends JFrame implements ServletContextListener {
 						if (filter == null || filter.isEmpty())
 							continue;
 
-							Vector<Splited> matches = algoritmo.splitedMatch(line, lineStartOffset, filter);
+						Vector<Splited> matches = algoritmo.splitedMatch(line, lineStartOffset, filter);
 
 						if (matches != null) {
-							//Solo para posicionar el caret en modo seleccion
+							// Solo para posicionar el caret en modo seleccion
 							if (firstMatch == -1 && !matches.isEmpty()) {
 								firstMatch = matches.get(0).getIndexSplitedString();
 							}
@@ -4413,6 +4398,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 							}
 						}
 					}
+
 					offsetMultiplier++;
 				}
 			}
@@ -4429,16 +4415,23 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				StyleConstants.setForeground(attributeSet, Color.RED);
 				StyledDocument doc = textPane.getStyledDocument();
 
-				for (int[] h : result.highlights) {
-					doc.setCharacterAttributes(h[0], h[1], attributeSet, false);
-				}
+				logger.info("Highlights to apply: " + result.highlights.size());
+				if(result.highlights.size() > 0){
+					logger.info("First match position: " + result.highlights.get(0)[0]);
+					logger.info("First length position: " + result.highlights.get(0)[1]);				
 
-				if (!isFilterMode) { // select mode
-					if (result.firstMatchPos != -1) {
-						textPane.setCaretPosition(result.firstMatchPos);
-					} else {
-						// Optional: handle not found
+					for (int[] h : result.highlights) {
+						doc.setCharacterAttributes(h[0], h[1], attributeSet, false);
 					}
+
+					if (!isFilterMode) { // select mode
+						if (result.firstMatchPos != -1) {
+							textPane.setCaretPosition(result.firstMatchPos);
+						} else {
+							// Optional: handle not found
+						}
+					}
+
 				}
 
 			} catch (Exception e) {
