@@ -4411,17 +4411,38 @@ public class Visualizador extends JFrame implements ServletContextListener {
 				FilterResult result = get();
 				textPane.setText(result.text);
 
+				StyledDocument doc = textPane.getStyledDocument();
+				int docLength = doc.getLength();
+
+				// PASO 1: Resetear el color de TODO el documento al color por defecto
+				// del JTextPane ANTES de aplicar los highlights.
+				// Esto es obligatorio para evitar que atributos rojos residuales de
+				// llamadas anteriores queden en el elemento terminal del
+				// DefaultStyledDocument (que actua como plantilla de atributos por defecto).
+				SimpleAttributeSet resetAttr = new SimpleAttributeSet();
+				StyleConstants.setForeground(resetAttr, textPane.getForeground());
+				doc.setCharacterAttributes(0, docLength, resetAttr, false);
+
 				SimpleAttributeSet attributeSet = new SimpleAttributeSet();
 				StyleConstants.setForeground(attributeSet, Color.RED);
-				StyledDocument doc = textPane.getStyledDocument();
 
 				logger.info("Highlights to apply: " + result.highlights.size());
-				if(result.highlights.size() > 0){
+				if (result.highlights.size() > 0) {
 					logger.info("First match position: " + result.highlights.get(0)[0]);
-					logger.info("First length position: " + result.highlights.get(0)[1]);				
+					logger.info("First length position: " + result.highlights.get(0)[1]);
 
 					for (int[] h : result.highlights) {
-						doc.setCharacterAttributes(h[0], h[1], attributeSet, false);
+						int pos = h[0];
+						int len = h[1];
+						// PASO 2: Guardia de bounds.
+						// Si pos+len supera docLength, setCharacterAttributes modifica el
+						// elemento terminal del DefaultStyledDocument (el '\n' guardian
+						// implicito al final), corrompiendo los atributos por defecto del
+						// documento y haciendo que TODO el texto futuro salga en rojo.
+						if (pos >= 0 && pos < docLength) {
+							int safelen = Math.min(len, docLength - pos);
+							doc.setCharacterAttributes(pos, safelen, attributeSet, false);
+						}
 					}
 
 					if (!isFilterMode) { // select mode
