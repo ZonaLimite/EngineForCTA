@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,6 +26,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 			.setAllowedOriginPatterns(crossOriginAllowed)
 			.withSockJS();
 			System.out.println("RegistradoStompEndpoint");
+		}
+		
+		
+		public void configureClientInboundChannel(ChannelRegistration registration) {
+			registration.taskExecutor()
+    		.corePoolSize(1)   // ← Solo 1 hilo procesando en paralelo
+    		.maxPoolSize(1);   
+		// → procesamiento SECUENCIAL, orden garantizado de los mensajes entrantes enviados desde el cliente
 		}
 
 		@Override
