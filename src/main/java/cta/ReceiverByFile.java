@@ -1,33 +1,15 @@
 package cta;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.DatagramPacket;
-
-import java.net.DatagramSocket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyledDocument;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
-
 import cta.designe.listener.Algoritmos;
 import cta.designe.listener.STATE_COMMAND;
 import cta.designe.listener.StatedCommand;
@@ -82,9 +64,10 @@ public class ReceiverByFile implements Runnable,IReceiver {
 					Thread.sleep(1);
 				
 					//cadenaMensaje = br.readLine();
-					//A�adimos identificador de sistema origen a la cadena
+					//Aadimos identificador de sistema origen a la cadena
 					cadenaMensaje = cTarea.getNameSocketSistema().concat(" "+cadenaMensaje);
 
+					//Checkear si hay comandos registrados
 					checkCommands(cadenaMensaje);
 	
 					if(algoritmos.filterMatch(cadenaMensaje, sArrayFilter, vis.getFilterExclusive().isSelected())) {
@@ -147,7 +130,6 @@ public class ReceiverByFile implements Runnable,IReceiver {
 		// Configuracion 3
 		// Comprobar Listeners
 		if (vis.getCheckListener1().isSelected()) {  
-		
 			if (algoritmos.filterMatch(cadena,vis.getCatalogListener(), true)) {
 				vis.getTextAreaHandlers().append(cadena.concat(System.getProperty("line.separator")));
 			}
@@ -159,9 +141,6 @@ public class ReceiverByFile implements Runnable,IReceiver {
 			if (algoritmos.filterMatch(cadena,vis.getCatalogListener(), true)) {
 				smt.convertAndSend("/channel/traces", new ModelEventTrace("eventTrace",cadena));
 			}
-			
-
-			
 		}
 			
 	}
