@@ -2707,6 +2707,16 @@ public class Visualizador extends JFrame implements ServletContextListener {
 
 	}
 
+	public void borrarTodosModelFilterDeListener() {
+		int intNumItems = comboListenersActivos.getItemCount();
+		int n = 0;
+
+		for (n = intNumItems - 1; n >= 0; n--) {
+			ModelFilter modelABorrar = comboListenersActivos.getItemAt(n);
+			this.borrarModelFilterDeListener(modelABorrar);
+		}
+	}
+
 	protected int addItemComboModelFilterActivos(String sModelFilter) {
 		// Si no esta ya incluido , se añade
 
