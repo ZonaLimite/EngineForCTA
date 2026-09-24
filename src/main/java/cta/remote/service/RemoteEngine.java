@@ -55,6 +55,10 @@ public class RemoteEngine {
 
 	}
 
+	public void borrarTodosModelFilterDeListener() {
+		vis.borrarTodosModelFilterDeListener();
+	}
+
 	public String[] getSistemasRegistrados() {
 		return vis.aSistemas;
 	}
