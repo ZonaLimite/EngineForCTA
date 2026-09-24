@@ -133,6 +133,10 @@ public class EngineProtocol {
 				// devolver modelfiltersActivos
 				break;
 
+			case "borrarTodosModelFilterDeListener":
+				re.borrarTodosModelFilterDeListener();
+				break;
+
 			case "quitarlistenermodelfilter":
 				re.borrarModelFilterDeListenerActivos(comando.data[0]);
 				// devolver modelfiltersActivos
