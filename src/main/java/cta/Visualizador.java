@@ -3729,7 +3729,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 	}
 
 	// Actualiza estructuras de informacion consulta
-	private void refreshObjectConsulta(Consulta consulta) {
+	public void refreshObjectConsulta(Consulta consulta) {
 
 		if (consulta == null)
 			return;

@@ -51,7 +51,9 @@ public class RemoteEngine {
 
 	// Ojo la clave es compuesta con sistema:nameconsulta
 	public void selectConsulta(String nameSistemaConsulta) {
-		vis.getCombo_Consultas().setSelectedItem(vis.getCatalogoConsultas().get(nameSistemaConsulta));
+		Consulta consulta = vis.getCatalogoConsultas().get(nameSistemaConsulta);
+		vis.getCombo_Consultas().setSelectedItem(consulta);
+		vis.refreshObjectConsulta(consulta);
 
 	}
 
