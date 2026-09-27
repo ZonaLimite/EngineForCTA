@@ -53,6 +53,7 @@ public class RemoteEngine {
 	public void selectConsulta(String nameSistemaConsulta) {
 		Consulta consulta = vis.getCatalogoConsultas().get(nameSistemaConsulta);
 		vis.getCombo_Consultas().setSelectedItem(consulta);
+		vis.getCombo_Consultas().requestFocus();
 		vis.refreshObjectConsulta(consulta);
 
 	}
