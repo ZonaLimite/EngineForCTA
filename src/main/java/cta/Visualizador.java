@@ -1388,7 +1388,7 @@ public class Visualizador extends JFrame implements ServletContextListener {
 		btnClear.setFont(new Font("Dialog", Font.PLAIN, 12));
 
 		checkMostrarLineasTextArea = new JCheckBox("Rellenar TextArea");
-		checkMostrarLineasTextArea.setSelected(true);
+		checkMostrarLineasTextArea.setSelected(false);
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 				gl_panel_3.createParallelGroup(Alignment.TRAILING)
